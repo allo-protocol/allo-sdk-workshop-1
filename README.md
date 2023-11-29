@@ -40,7 +40,7 @@ Write objectives on the whiteboard so they can be referenced during a talk.
 
 Fork and clone this repository.
 
-Create a new branch, training, for your work.
+Create a new branch from start, training, for your work.
 
 Checkout to the training branch.
 
