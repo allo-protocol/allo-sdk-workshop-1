@@ -3,6 +3,7 @@ import { MicroGrantsStrategy, Registry } from "@allo-team/allo-v2-sdk/";
 import React, { useState } from "react";
 
 import { MicroGrantsABI } from "@/abi/Microgrants";
+import { RegistryABI } from "@/abi/Registry";
 import {
   EProgressStatus,
   ETarget,
@@ -14,6 +15,7 @@ import { getChain, wagmiConfigData } from "@/services/wagmi";
 import {
   ethereumHashRegExp,
   extractLogByEventName,
+  getEventValues,
   pollUntilDataIsIndexed,
   pollUntilMetadataIsAvailable,
 } from "@/utils/common";
@@ -38,7 +40,7 @@ export interface IApplicationContextProps {
 
 const initialSteps: TProgressStep[] = [
   {
-    id: 'application-0',
+    id: "application-0",
     content: "Using profile ",
     target: "",
     href: "",
@@ -197,8 +199,9 @@ export const ApplicationContextProvider = (props: {
             hash: tx.hash,
           });
 
-        const { logs } = receipt;
-        profileId = logs[0].topics[1] || "0x";
+        profileId =
+          getEventValues(receipt, RegistryABI, "ProfileCreated").profileId ||
+          "0x";
 
         if (profileId === "0x") {
           throw new Error("Profile creation failed");
@@ -290,7 +293,7 @@ export const ApplicationContextProvider = (props: {
 
       const { logs } = reciept;
       const decodedLogs = logs.map((log) =>
-        decodeEventLog({ ...log, abi: MicroGrantsABI }),
+        decodeEventLog({ ...log, abi: MicroGrantsABI })
       );
 
       let log = extractLogByEventName(decodedLogs, "Registered");
@@ -340,13 +343,9 @@ export const ApplicationContextProvider = (props: {
     stepIndex++;
 
     // 5. Index Metadata
-
-    console.log("pointer.IpfsHash", pointer.IpfsHash);
     const pollingMetadataResult = await pollUntilMetadataIsAvailable(
       pointer.IpfsHash
     );
-
-    console.log("pollingMetadataResult", pollingMetadataResult);
 
     if (pollingMetadataResult) {
       updateStepStatus(stepIndex, true);

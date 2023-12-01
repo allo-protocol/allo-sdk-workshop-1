@@ -1,40 +1,42 @@
 "use client";
 
-import Error from "@/components/shared/Error";
-import Modal from "../shared/Modal";
-import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import {
   TNewPool,
   TPoolData,
   TProfilesByOwnerResponse,
-  TStrategyType,
+  TStrategyType
 } from "@/app/types";
-import { useAccount, useNetwork, useToken } from "wagmi";
+import Error from "@/components/shared/Error";
 import { NewPoolContext } from "@/context/NewPoolContext";
-import { useRouter } from "next/navigation";
-import ImageUpload from "../shared/ImageUpload";
-import { MarkdownEditor } from "../shared/Markdown";
-import { parseUnits } from "viem";
-import getProfilesByOwner from "@/utils/request";
-import PoolOverview from "./PoolOverview";
-import { StrategyType } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
 import { wagmiConfigData } from "@/services/wagmi";
-import { NATIVE, ethereumAddressRegExp } from "@/utils/common";
 import {
   getPastVotesAddressUint256,
   getPriorVotesAddressUint,
   getPriorVotesAddressUint256,
 } from "@/utils/4byte";
+import { NATIVE, ethereumAddressRegExp } from "@/utils/common";
+import getProfilesByOwner from "@/utils/request";
+import { StrategyType } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import {
+  parseUnits
+} from "viem";
+import { useAccount, useNetwork, useToken } from "wagmi";
+import * as yup from "yup";
+import ImageUpload from "../shared/ImageUpload";
+import { MarkdownEditor } from "../shared/Markdown";
+import Modal from "../shared/Modal";
+import PoolOverview from "./PoolOverview";
 
 const schema = yup.object({
   profileId: yup
     .string()
     .required("Profile ID is required")
     .test("address-check", "Must start with 0x", (value) =>
-      value?.toLowerCase()?.startsWith("0x"),
+      value?.toLowerCase()?.startsWith("0x")
     ),
   name: yup.string().required().min(6, "Must be at least 6 characters"),
   website: yup.string().required().url("Must be a valid website address"),
@@ -44,14 +46,14 @@ const schema = yup.object({
     .test(
       "is-number",
       "fund pool amount is required",
-      (value) => !isNaN(Number(value)),
+      (value) => !isNaN(Number(value))
     ),
   maxAmount: yup
     .string()
     .test(
       "is-number",
       "max amount is required",
-      (value) => !isNaN(Number(value)),
+      (value) => !isNaN(Number(value))
     ),
   approvalThreshold: yup.number().required("approval threshold is required"),
   startDate: yup.date().required("Start time is required"),
@@ -108,7 +110,7 @@ export default function PoolForm() {
   const [isOpen, setIsOpen] = useState(false);
   const [profiles, setProfiles] = useState<TProfilesByOwnerResponse[]>([]);
   const [strategy, setStrategy] = useState<TStrategyType>(
-    StrategyType.MicroGrants as TStrategyType,
+    StrategyType.MicroGrants as TStrategyType
   );
   const [createNewProfile, setCreateNewProfile] = useState<boolean>(false);
   const [poolToken, setPoolToken] = useState("");
@@ -135,17 +137,11 @@ export default function PoolForm() {
     formState: { errors },
   } = useForm({
     resolver: yupResolver(schema),
-    // defaultValues: {
-    //   snapshotReference:
-    //     strategy === StrategyType.Gov
-    //       ? latestBlockNumber.toString()
-    //       : undefined,
-    // },
   });
 
   const [isPreview, setIsPreview] = useState<boolean>(false);
   const [newPoolData, setNewPoolData] = useState<TNewPool | undefined>(
-    undefined,
+    undefined
   );
 
   const nowPlus10Minutes = new Date();
@@ -201,7 +197,7 @@ export default function PoolForm() {
       minVotePower: data?.minVotePower
         ? parseUnits(
             data?.minVotePower,
-            govTokenInstance?.data?.decimals || 18,
+            govTokenInstance?.data?.decimals || 18
           ).toString()
         : "0",
     };
@@ -329,7 +325,7 @@ export default function PoolForm() {
   useEffect(() => {
     const fetchLatestBlockNumber = async () => {
       setLatestBlockNumber(
-        (await wagmiConfigData.publicClient.getBlockNumber()).toString(),
+        (await wagmiConfigData.publicClient.getBlockNumber()).toString()
       );
     };
     fetchLatestBlockNumber();

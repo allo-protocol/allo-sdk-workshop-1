@@ -89,7 +89,7 @@ export type TMicroGrantRecipient = {
   status: ApplicationStatus;
   metadata?: any;
   applicationBanner?: string;
-}
+};
 
 export type TNewPool = TPoolMetadata & {
   // chain info
@@ -279,7 +279,14 @@ export type TProfileResponse = {
   createdAt: string;
 };
 
-type AbiItem = {
+export type AbiComponent = {
+  name: string;
+  type: string;
+  internalType?: string;
+  components?: Array<AbiComponent>;
+};
+
+export type AbiItem = {
   type: string; // 'function', 'event', 'constructor', etc.
   name?: string; // Function or event name
   anonymous?: boolean; // true if the function is anonymous
@@ -288,6 +295,7 @@ type AbiItem = {
     type: string;
     internalType?: string;
     indexed?: boolean;
+    components?: Array<AbiComponent>;
   }>; // Function or event parameters
   outputs?: Array<{
     name: string;

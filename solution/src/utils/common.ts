@@ -1,16 +1,14 @@
-import { ContractAbi, EPoolStatus } from "@/app/types";
+import { AbiComponent, AbiItem, ContractAbi, EPoolStatus } from "@/app/types";
+import { getIPFSClient } from "@/services/ipfs";
+import request from "graphql-request";
 import {
-  Log,
   TransactionReceipt,
-  decodeAbiParameters,
+  decodeEventLog,
   formatUnits,
   keccak256,
-  stringToBytes,
+  stringToBytes
 } from "viem";
 import { graphqlEndpoint } from "./query";
-import request from "graphql-request";
-import { getIPFSClient } from "@/services/ipfs";
-import { StrategyType } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
 
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -64,7 +62,7 @@ export function humanReadableAmount(amount: string, decimals?: number) {
 
 export function isPoolActive(
   allocationStartTime: number,
-  allocationEndTime: number,
+  allocationEndTime: number
 ) {
   const now = Date.now() / 1000;
   return now >= allocationStartTime && now <= allocationEndTime;
@@ -81,7 +79,7 @@ export const ethereumHashRegExp = /^(0x)?[0-9a-fA-F]{64}$/;
 
 export const getPoolStatus = (
   startDate: number,
-  endDate: number,
+  endDate: number
 ): EPoolStatus => {
   const now = new Date().getTime() / 1000;
   const start = new Date(startDate).getTime();
@@ -97,7 +95,7 @@ export const getPoolStatus = (
 };
 
 export const pollUntilMetadataIsAvailable = async (
-  pointer: string,
+  pointer: string
 ): Promise<boolean> => {
   const ipfsClient = getIPFSClient();
   let counter = 0;
@@ -116,7 +114,7 @@ export const pollUntilMetadataIsAvailable = async (
       if (counter > 20) return false;
       // Corrected: Return the result of the recursive call
       return await new Promise((resolve) => setTimeout(resolve, 2000)).then(
-        fetchMetadata,
+        fetchMetadata
       );
     }
   };
@@ -126,7 +124,7 @@ export const pollUntilMetadataIsAvailable = async (
 export const pollUntilDataIsIndexed = async (
   QUERY_ENDPOINT: any,
   data: any,
-  propToCheck: string,
+  propToCheck: string
 ): Promise<boolean> => {
   let counter = 0;
   const fetchData: any = async () => {
@@ -142,7 +140,7 @@ export const pollUntilDataIsIndexed = async (
 
       // If the data is not indexed, schedule the next fetch after 2 seconds
       return await new Promise((resolve) => setTimeout(resolve, 2000)).then(
-        fetchData,
+        fetchData
       );
     }
   };
@@ -187,7 +185,7 @@ export const NATIVE =
   "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE".toLowerCase();
 
 export const getStrategyTypeFromStrategyName = (
-  strategyName: string,
+  strategyName: string
 ): string => {
   if (strategyName === "allov2.MicroGrantsStrategy") return "Manual";
   if (strategyName === "allov2.MicroGrantsGovStrategy") return "Governance";
@@ -203,35 +201,63 @@ export const extractLogByEventName = (logs: any[], eventName: string) => {
 export const getEventValues = (
   receipt: TransactionReceipt,
   abi: ContractAbi,
-  eventName: string,
-) => {
+  eventName: string
+): any => {
   const { logs } = receipt;
-  const events = abi.filter(
-    (item) => item.type === "event" && item.name === eventName,
-  );
+  const event = abi.filter(
+    (item) => item.type === "event" && item.name === eventName
+  )[0];
 
-  const event = events[0];
-  const inputTypes = event.inputs
-    ? event.inputs.map((input) => input.type)
-    : [];
-  const inputTypesString = inputTypes.join(",");
-  const eventString = `${event.name}(${inputTypesString})`;
+  console.log("event", event);
 
-  const eventTopic = keccak256(stringToBytes(eventString));
+  const eventTopic = getEventTopic(event);
 
   const log = logs.find(
-    (log) => log.topics[0]?.toLowerCase() === eventTopic.toLowerCase(),
+    (log) => log.topics[0]?.toLowerCase() === eventTopic.toLowerCase()
   );
 
-  const values = decodeAbiParameters(event.inputs!, log!.data!);
-  const logValuesObject: any = {};
-  if (values) {
-    values.forEach((value: any, index) => {
-      logValuesObject[event.inputs![index].name] = value.toString();
-    });
+  const { topics, data } = log as { topics: string[]; data: string };
+
+  const d = decodeEventLog({
+    abi: [event as any],
+    data: data as `0x${string}`,
+    topics: topics as any,
+  });
+
+  return d.args;
+};
+
+function getEventTopic(event: AbiItem): string {
+  const inputTypesString = getInputTypeString(event);
+  const eventString = `${event.name}(${inputTypesString})`;
+  const eventTopic = keccak256(stringToBytes(eventString));
+
+  return eventTopic;
+}
+
+function getInputTypeString(event: AbiItem): string {
+  const inputTypes = event.inputs ? flattenInputTypes(event.inputs) : [];
+  return inputTypes.join(",");
+}
+
+function flattenInputTypes(
+  inputs: Array<{
+    name: string;
+    type: string;
+    components?: Array<AbiComponent>;
+  }>
+): string[] {
+  const result: string[] = [];
+
+  for (const input of inputs) {
+    if (input.components) {
+      const componentsString = flattenInputTypes(input.components).join(",");
+
+      result.push(`(${componentsString})`);
+    } else {
+      result.push(input.type);
+    }
   }
 
-  // returns a nice object with the values of the event
-  // example: {poolId: "42", data: "0x1234"}
-  return logValuesObject;
-};
+  return result;
+}
