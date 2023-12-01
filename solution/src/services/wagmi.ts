@@ -2,19 +2,17 @@
 
 import { getDefaultWallets } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig } from "wagmi";
-import { arbitrumGoerli } from "wagmi/chains";
-import { publicProvider } from "wagmi/providers/public";
-
+import { arbitrum, arbitrumGoerli, goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
+import { publicProvider } from "wagmi/providers/public";
 
 import dotenv from "dotenv";
 dotenv.config();
 
-const supportedChains = [arbitrumGoerli];
-
+const availableChains = [arbitrum, arbitrumGoerli, goerli];
 const { chains, publicClient } = configureChains(
-  [...supportedChains],
+  [...availableChains],
   [
     alchemyProvider({
       apiKey:
@@ -30,7 +28,7 @@ const { chains, publicClient } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "Sea Grants Lite",
+  appName: "Micro Grants",
   projectId: (process.env.PROJECT_ID as string) || "YOUR_PROJECT_ID",
   chains,
 });
