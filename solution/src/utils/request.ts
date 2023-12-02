@@ -1,8 +1,8 @@
 "use server";
 
 import { TProfileResponse, TProfilesByOwnerResponse } from "@/app/types";
-import { getProfile, getProfilesByOwnerQuery, graphqlEndpoint } from "./query";
 import request from "graphql-request";
+import { getProfile, getProfilesByOwnerQuery, graphqlEndpoint } from "./query";
 
 const getProfilesByOwner = async ({
   chainId,
@@ -18,7 +18,7 @@ const getProfilesByOwner = async ({
     owner: account,
   });
 
-  // filter out old profiles that were created before the new registry where deployed
+  // filter out old profiles that were created before the new registry was deployed
   const filteredProfiles = response.profilesByOwner.filter(
     (profile) =>
       new Date(profile.createdAt) > new Date("2023-11-02T00:00:00+00:00"),
