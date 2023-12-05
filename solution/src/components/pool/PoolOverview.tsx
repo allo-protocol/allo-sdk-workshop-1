@@ -1,9 +1,8 @@
 "use client";
 
 import { TNewApplicationResponse, TPoolData, TPoolMetadata } from "@/app/types";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Breadcrumb from "../shared/Breadcrumb";
-import { aspectRatio } from "@/utils/config";
 import { classNames, getStrategyTypeFromStrategyName } from "@/utils/common";
 import PoolDetail from "./PoolDetail";
 import ApplicationList from "../application/ApplicationList";

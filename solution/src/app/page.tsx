@@ -1,11 +1,11 @@
-import { EPoolStatus, TPoolData, TPoolMetadata } from "@/app/types";
 import PoolList from "@/components/pool/PoolList";
-import { getIPFSClient } from "@/services/ipfs";
-import { getPoolStatus } from "@/utils/common";
 import { getMicroGrantsQuery, graphqlEndpoint } from "@/utils/query";
 import request from "graphql-request";
-import Image from "next/image";
+import { EPoolStatus, TPoolData, TPoolMetadata } from "@/app/types";
+import { getIPFSClient } from "@/services/ipfs";
+import { getPoolStatus } from "@/utils/common";
 import logo from "./assets/logo.svg";
+import Image from "next/image";
 
 export default async function Home() {
   const ipfsClient = getIPFSClient();
@@ -70,13 +70,12 @@ export default async function Home() {
           <Image
             className="mx-auto mb-3"
             src={logo}
-            alt="Sea Grants Lite"
+            alt="Sea Grants"
             width={128}
           />
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
             <span className="text-sky-400">Sea</span>
             <span className="text-sky-600">Grants</span>
-            <span className="text-sky-400">Lite</span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600">
             Micro-grant programs, common in web3 communities like Gitcoin, Celo,

@@ -10,18 +10,28 @@ import {
 import Error from "@/components/shared/Error";
 import { ApplicationContext } from "@/context/ApplicationContext";
 import { humanReadableAmount } from "@/utils/common";
-import getProfilesByOwner from "@/utils/request";
+import getProfilesByOwner, { getApplicationData } from "@/utils/request";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useParams, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { parseUnits } from "viem";
+import { formatUnits, parseUnits } from "viem";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import * as yup from "yup";
 import ImageUpload from "../shared/ImageUpload";
 import { MarkdownEditor } from "../shared/Markdown";
 import Modal from "../shared/Modal";
 import ApplicationDetail from "./ApplicationDetail";
+
+type ApplicationFormData = {
+  name: string;
+  website: string;
+  description: string;
+  email: string;
+  requestedAmount: string;
+  recipientAddress: string;
+  profileId: string;
+};
 
 export default function ApplicationForm(props: { microGrant: TPoolData }) {
   const { chain } = useNetwork();
@@ -30,8 +40,8 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
   const maxRequestedAmount = Number(
     humanReadableAmount(
       props.microGrant.maxRequestedAmount,
-      props.microGrant.pool.tokenMetadata.decimals || 18
-    )
+      props.microGrant.pool.tokenMetadata.decimals || 18,
+    ),
   );
 
   const schema = yup.object({
@@ -48,18 +58,18 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
       .test(
         "is-number",
         "Requested amount is required",
-        (value) => !isNaN(Number(value))
+        (value) => !isNaN(Number(value)),
       )
       .test(
         "max-amount",
         `Amount must be less than ${maxRequestedAmount}`,
-        (value) => Number(value) <= maxRequestedAmount
+        (value) => Number(value) <= maxRequestedAmount,
       ),
     recipientAddress: yup
       .string()
       .required("Recipient address is required")
       .test("address-check", "Must start with 0x", (value) =>
-        value?.toLowerCase()?.startsWith("0x")
+        value?.toLowerCase()?.startsWith("0x"),
       ),
     profilename: yup.string().when("profileId", {
       is: (profileId: string) => profileId.trim() === "0x0",
@@ -82,7 +92,18 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
   const params = useParams();
   const chainId = params["chainId"];
   const poolId = params["poolId"];
+  const applicationId: string | string[] | undefined = params["applicationId"];
+
   const [isOpen, setIsOpen] = useState(false);
+  const [defaultValues, setDefaultValues] = useState({
+    name: "",
+    website: "",
+    description: "",
+    email: "",
+    requestedAmount: "",
+    recipientAddress: "",
+    profileId: "",
+  });
   const {
     register,
     handleSubmit,
@@ -128,7 +149,10 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
       website: data.website,
       description: data.description,
       email: data.email,
-      requestedAmount: parseUnits(data.requestedAmount, 18), // TODO: wire in actual decimal
+      requestedAmount: parseUnits(
+        data.requestedAmount,
+        props.microGrant.pool.tokenMetadata.decimals || 18,
+      ),
       recipientAddress: data.recipientAddress,
       base64Image: base64Image,
       profileName: newProfileName,
@@ -146,7 +170,7 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
     const recipientId = await createApplication(
       newApplicationData,
       Number(chainId),
-      Number(poolId)
+      Number(poolId),
     );
 
     setTimeout(() => {
@@ -183,7 +207,7 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
         distributeds: props.microGrant.distributeds || [],
       },
       sender: address as string,
-      recipientId: newApplicationData!.recipientAddress, // todo get the right recipientId
+      recipientId: newApplicationData!.recipientAddress,
       recipientAddress: newApplicationData!.recipientAddress,
       requestedAmount: newApplicationData!.requestedAmount.toString(),
       metadataPointer: "pointer",
@@ -214,13 +238,25 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
           anchor: "0x",
         };
 
-        const profiles: TProfilesByOwnerResponse[] = await getProfilesByOwner({
+        let profiles: TProfilesByOwnerResponse[] = await getProfilesByOwner({
           chainId: chainId.toString(),
           account: address.toLocaleLowerCase(),
         });
 
-        if (profiles.length === 0) setCreateNewProfile(true);
-        profiles.push(customProfile);
+        if (applicationId) {
+          // filter where profiles.anchor == applicationId
+          profiles = profiles.filter(
+            (profile) => profile.anchor === applicationId,
+          );
+
+          setDefaultValues({
+            ...defaultValues,
+            profileId: profiles[0].profileId,
+          });
+        } else {
+          if (profiles.length === 0) setCreateNewProfile(true);
+          profiles.push(customProfile);
+        }
 
         setProfiles(profiles);
       }
@@ -229,6 +265,53 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
     fetchProfiles();
   }, [address, chainId]);
 
+  useEffect(() => {
+    const fetchApplicationData = async () => {
+      if (applicationId) {
+        try {
+          const applicationData = await getApplicationData(
+            chainId as string,
+            poolId as string,
+            applicationId as string,
+          );
+
+          if (!applicationData.application || !applicationData.metadata) return;
+
+          const app = applicationData.application;
+          const md = applicationData.metadata;
+
+          const previousValues: ApplicationFormData = {
+            name: md.name,
+            website: md.website,
+            description: md.description,
+            email: md.email,
+            requestedAmount: formatUnits(
+              BigInt(app.requestedAmount),
+              props.microGrant.pool.tokenMetadata.decimals || 18,
+            ).toString(),
+            recipientAddress: app.recipientAddress,
+            profileId: profiles.length > 0 ? profiles[0].profileId : "0x0",
+          };
+
+          // for each key in previousValues, set the value
+          Object.keys(previousValues).forEach((key) => {
+            setValue(
+              key as keyof ApplicationFormData,
+              previousValues[key as keyof ApplicationFormData],
+            );
+          });
+
+          setDefaultValues(previousValues);
+          setBase64Image(applicationData.bannerImage);
+        } catch (error) {
+          console.error("Error fetching application data:", error);
+        }
+      }
+    };
+
+    if (chainId && poolId && applicationId) fetchApplicationData();
+  }, [applicationId, chainId, poolId, profiles]);
+
   return (
     <form onSubmit={handleSubmit(onHandlePreview)}>
       {!isPreview ? (
@@ -236,7 +319,7 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-gray-900/10 pb-12 md:grid-cols-3">
             <div>
               <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Project
+                {applicationId ? "Edit" : "New"} Application
               </h2>
               <p className="mt-1 text-sm leading-6 text-gray-600">
                 This information will be stored on IPFS and will be reviewed by
@@ -287,6 +370,7 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
                       id="website"
                       className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       placeholder="https://www.example.com"
+                      defaultValue={defaultValues.website}
                     />
                   </div>
                 </div>
@@ -306,7 +390,11 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
                 </label>
                 <MarkdownEditor
                   setText={setText}
-                  value={newApplicationData?.description || ""}
+                  value={
+                    defaultValues.description ||
+                    newApplicationData?.description ||
+                    ""
+                  }
                 />
                 {/* Register the "description" field */}
                 <input
@@ -339,6 +427,7 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
                     type="email"
                     autoComplete="email"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    defaultValue={defaultValues.email}
                   />
                 </div>
                 <div>
@@ -360,6 +449,7 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
                     name="requestedAmount"
                     type="text"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    defaultValue={defaultValues.requestedAmount}
                   />
                 </div>
                 <p className="text-xs leading-5 text-gray-600 mt-2">
@@ -389,6 +479,7 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
                     id="recipientAddress"
                     autoComplete="given-name"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    defaultValue={defaultValues.recipientAddress}
                   />
                   <div>
                     {errors.recipientAddress && (
@@ -403,7 +494,9 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
 
               <ImageUpload
                 setBase64Image={setBase64Image}
-                previewImage={newApplicationData?.base64Image || undefined}
+                previewImage={
+                  base64Image || newApplicationData?.base64Image || undefined
+                }
               />
             </div>
           </div>
@@ -438,7 +531,8 @@ export default function ApplicationForm(props: { microGrant: TPoolData }) {
                         id="profileId"
                         name="profileId"
                         className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                        defaultValue={profiles[0].profileId}
+                        defaultValue={defaultValues.profileId}
+                        disabled={applicationId ? true : false}
                         onChange={(e) => {
                           setCreateNewProfile(e.target.value === "0x0");
                         }}

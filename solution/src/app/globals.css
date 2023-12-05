@@ -117,6 +117,10 @@
   }
 }
 
+*:disabled {
+  opacity: 0.5;
+}
+
 a {
   color: #5a67d8;
   &:hover {
@@ -135,6 +139,7 @@ a {
   box-sizing: border-box;
   animation: rotation 1s linear infinite;
 }
+
 .loader::after,
 .loader::before {
   content: '';

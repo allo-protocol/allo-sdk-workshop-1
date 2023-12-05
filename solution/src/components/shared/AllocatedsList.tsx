@@ -7,23 +7,6 @@ import {
 import { InboxIcon } from "@heroicons/react/24/outline";
 import { Address, AddressResponsive } from "./Address";
 
-const people = [
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    email: "lindsay.walton@example.com",
-    role: "Member",
-  },
-  // More people...
-];
-
-// blockTimestamp: "2023-11-21T11:25:36+01:00";
-// chainId: "5";
-// contractAddress: "0x1a92384e01a8cb445d0508a03ef5306d35cdee47";
-// contractName: "MicroGrantsStrategy";
-// recipientId: "0x136d473d0c3965d7630f346152101e741074825f";
-// sender: "0xe7eb5d2b5b188777df902e89c54570e7ef4f59ce";
-
 export default function AllocatedList(props: {
   allocateds: TAllocatedData[];
   showApplication?: boolean;

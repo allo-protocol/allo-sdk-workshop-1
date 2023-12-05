@@ -6,6 +6,7 @@ import { WagmiConfig } from "wagmi";
 import { wagmiConfigData, chainData } from "@/services/wagmi";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
+import { ApplicationDetailContextProvider } from "@/context/ApplicationDetailContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -23,8 +24,10 @@ export default function RootLayout({
       <body className={`${inter.className}`}>
         <WagmiConfig config={wagmiConfigData}>
           <RainbowKitProvider chains={chainData}>
-            <Navbar />
-            <main className="px-6 md:px-0 mt-8">{children}</main>
+            <ApplicationDetailContextProvider>
+              <Navbar />
+              <main className="px-6 md:px-0 mt-8">{children}</main>
+            </ApplicationDetailContextProvider>
           </RainbowKitProvider>
         </WagmiConfig>
       </body>

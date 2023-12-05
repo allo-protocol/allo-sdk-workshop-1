@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactMde, { Preview } from "react-mde";
 import ReactMarkdown from "react-markdown";
 import "react-mde/lib/styles/css/react-mde-all.css";
@@ -24,6 +24,11 @@ export const MarkdownEditor = (props: {
     setValue(value);
     props.setText(value);
   };
+
+  useEffect(() => {
+    if (!props.value) return;
+    setValue(props.value);
+  }, [props.value]);
 
   const save = async function* (file: any) {
     try {

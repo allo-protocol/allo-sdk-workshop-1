@@ -1,35 +1,37 @@
 "use client";
 
+import Error from "@/components/shared/Error";
+import Modal from "../shared/Modal";
+import { useContext, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import {
   TNewPool,
   TPoolData,
   TProfilesByOwnerResponse,
-  TStrategyType
+  TStrategyType,
 } from "@/app/types";
-import Error from "@/components/shared/Error";
+import { useAccount, useNetwork, useToken } from "wagmi";
 import { NewPoolContext } from "@/context/NewPoolContext";
+import { useRouter } from "next/navigation";
+import ImageUpload from "../shared/ImageUpload";
+import { MarkdownEditor } from "../shared/Markdown";
+import { parseUnits } from "viem";
+import getProfilesByOwner from "@/utils/request";
+import PoolOverview from "./PoolOverview";
+import { StrategyType } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
 import { wagmiConfigData } from "@/services/wagmi";
+import { NATIVE, ethereumAddressRegExp } from "@/utils/common";
 import {
   getPastVotesAddressUint256,
   getPriorVotesAddressUint,
   getPriorVotesAddressUint256,
 } from "@/utils/4byte";
-import { NATIVE, ethereumAddressRegExp } from "@/utils/common";
-import getProfilesByOwner from "@/utils/request";
-import { StrategyType } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import {
-  parseUnits
-} from "viem";
-import { useAccount, useNetwork, useToken } from "wagmi";
-import * as yup from "yup";
-import ImageUpload from "../shared/ImageUpload";
-import { MarkdownEditor } from "../shared/Markdown";
-import Modal from "../shared/Modal";
-import PoolOverview from "./PoolOverview";
+
+const nowPlus10Minutes = new Date();
+nowPlus10Minutes.setMinutes(nowPlus10Minutes.getMinutes() + 10);
+const minDate = nowPlus10Minutes.toISOString().slice(0, -8);
 
 const schema = yup.object({
   profileId: yup
@@ -56,8 +58,19 @@ const schema = yup.object({
       (value) => !isNaN(Number(value))
     ),
   approvalThreshold: yup.number().required("approval threshold is required"),
-  startDate: yup.date().required("Start time is required"),
-  endDate: yup.date().required("End time is required"),
+  startDate: yup
+    .date()
+    .min(minDate, "Start date must be at least 10 minutes in the future")
+    .required("Start date is required"),
+  endDate: yup
+    .date()
+    .when(
+      "startDate",
+      (startDate, schema) =>
+        startDate &&
+        schema.min(startDate, "End date must be after the start date")
+    )
+    .required("End time is required"),
   tokenAddress: yup.string().notRequired(),
   useRegistryAnchor: yup.string().required("Registry anchor is required"),
   profilename: yup.string().when("profileId", {
@@ -143,10 +156,6 @@ export default function PoolForm() {
   const [newPoolData, setNewPoolData] = useState<TNewPool | undefined>(
     undefined
   );
-
-  const nowPlus10Minutes = new Date();
-  nowPlus10Minutes.setMinutes(nowPlus10Minutes.getMinutes() + 10);
-  const minDate = nowPlus10Minutes.toISOString().slice(0, -8);
 
   const chainId = chain?.id;
 
@@ -742,7 +751,6 @@ export default function PoolForm() {
                 </label>
                 <div className="mt-2">
                   <input
-                    min={minDate}
                     {...register("startDate")}
                     id="startDate"
                     name="startDate"
@@ -766,7 +774,6 @@ export default function PoolForm() {
                 </label>
                 <div className="mt-2">
                   <input
-                    min={minDate}
                     {...register("endDate")}
                     id="endDate"
                     name="endDate"

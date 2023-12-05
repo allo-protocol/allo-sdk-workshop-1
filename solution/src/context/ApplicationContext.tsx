@@ -3,7 +3,6 @@ import { MicroGrantsStrategy, Registry } from "@allo-team/allo-v2-sdk/";
 import React, { useState } from "react";
 
 import { MicroGrantsABI } from "@/abi/Microgrants";
-import { RegistryABI } from "@/abi/Registry";
 import {
   EProgressStatus,
   ETarget,
@@ -28,6 +27,7 @@ import {
 import { sendTransaction } from "@wagmi/core";
 import { decodeEventLog } from "viem";
 import { useAccount } from "wagmi";
+import { RegistryABI } from "@/abi/Registry";
 
 export interface IApplicationContextProps {
   steps: TProgressStep[];
@@ -40,7 +40,7 @@ export interface IApplicationContextProps {
 
 const initialSteps: TProgressStep[] = [
   {
-    id: "application-0",
+    id: 'application-0',
     content: "Using profile ",
     target: "",
     href: "",
@@ -105,7 +105,7 @@ export const ApplicationContextProvider = (props: {
       newSteps[index].status = EProgressStatus.IS_ERROR;
     }
 
-    if (steps.length > index + 1)
+    if (flag && steps.length > index + 1)
       newSteps[index + 1].status = EProgressStatus.IN_PROGRESS;
 
     setSteps(newSteps);
@@ -129,6 +129,14 @@ export const ApplicationContextProvider = (props: {
     chain: number,
     poolId: number
   ): Promise<string> => {
+
+    // reset steps
+    steps.map((step, index) => {
+      if (index == 0) step.status = EProgressStatus.IN_PROGRESS;
+      else step.status = EProgressStatus.NOT_STARTED;
+    })
+    setSteps(steps);
+
     // todo: check for supported chain. Update steps if not supported.
     if (chain !== 5) {
       // todo: update steps
@@ -209,7 +217,7 @@ export const ApplicationContextProvider = (props: {
 
         updateStepHref(
           stepIndex,
-          `${chainInfo.blockExplorers.default.url}/tx/` + tx.hash
+          `${chainInfo.blockExplorers.default.url}/tx/` + tx.hash,
         );
       } catch (e) {
         updateStepStatus(stepIndex, false);
@@ -293,7 +301,7 @@ export const ApplicationContextProvider = (props: {
 
       const { logs } = reciept;
       const decodedLogs = logs.map((log) =>
-        decodeEventLog({ ...log, abi: MicroGrantsABI })
+        decodeEventLog({ ...log, abi: MicroGrantsABI }),
       );
 
       let log = extractLogByEventName(decodedLogs, "Registered");
@@ -305,12 +313,12 @@ export const ApplicationContextProvider = (props: {
 
       updateStepTarget(
         stepIndex,
-        `${chainInfo.name} at ${tx.hash.slice(0, 6)}`
+        `${chainInfo.name} at ${tx.hash.slice(0, 6)}`,
       );
 
       updateStepHref(
         stepIndex,
-        `${chainInfo.blockExplorers.default.url}/tx/` + tx.hash
+        `${chainInfo.blockExplorers.default.url}/tx/` + tx.hash,
       );
 
       updateStepStatus(stepIndex, true);
@@ -330,7 +338,7 @@ export const ApplicationContextProvider = (props: {
     const pollingResult: boolean = await pollUntilDataIsIndexed(
       checkIfRecipientIsIndexedQuery,
       pollingData,
-      "microGrantRecipient"
+      "microGrantRecipient",
     );
 
     if (pollingResult) {
@@ -344,7 +352,7 @@ export const ApplicationContextProvider = (props: {
 
     // 5. Index Metadata
     const pollingMetadataResult = await pollUntilMetadataIsAvailable(
-      pointer.IpfsHash
+      pointer.IpfsHash,
     );
 
     if (pollingMetadataResult) {

@@ -25,17 +25,18 @@ import {
 } from "../shared/Address";
 import Activity from "../shared/Activity";
 import { useAccount } from "wagmi";
+import Link from "next/link";
 
 export default function ApplicationDetail(props: {
   application: TApplicationData;
   metadata: TApplicationMetadata;
   bannerImage: string;
-  isError: boolean;
+  isError?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { isAllocator, steps, allocate } = useContext(PoolContext);
+  const { isAllocator, isPoolManager, steps, allocate } =
+    useContext(PoolContext);
   const { address } = useAccount();
-
   const microGrantRecipient = props.application;
   const microGrant = microGrantRecipient.microGrant;
   const tokenMetadata = microGrant.pool.tokenMetadata;
@@ -285,6 +286,16 @@ export default function ApplicationDetail(props: {
     }, 1000);
   };
 
+  const isEditable = () => {
+    const now = Math.floor(Date.now() / 1000);
+    return (
+      // todo: check if address is profile member or owner
+      address?.toLowerCase() === props.application.sender.toLowerCase() &&
+      Number(microGrant.allocationEndTime) > now && // upcoming or active pool
+      !hasAllocated
+    );
+  };
+
   return (
     <div className="bg-white">
       {props.isError && (
@@ -296,7 +307,19 @@ export default function ApplicationDetail(props: {
 
       <div>
         <header>
-          <Breadcrumb breadcrumbs={application.breadcrumbs} />
+          <div className="flex flex-row">
+            <Breadcrumb breadcrumbs={application.breadcrumbs} />
+            <div className="ml-auto space-x-2 px-4 sm:px-6 lg:px-8">
+              {/* todo: check if address is profile owner and if the application has NO reviews, pool is upcoming or active */}
+              {isEditable() && (
+                <Link
+                  href={`/${microGrant.chainId}/${microGrant.poolId}/${application.recipientId}/edit`}
+                >
+                  Edit
+                </Link>
+              )}
+            </div>
+          </div>
 
           {/* Banner */}
           <div className="mx-auto mt-6 max-h-[20rem] sm:px-6 lg:grid lg:gap-x-8 lg:px-8">

@@ -1,15 +1,15 @@
 "use client";
 
+import { Fragment } from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Disclosure, Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
-import Link from "next/link";
-import { useParams } from "next/navigation";
-import { Fragment } from "react";
-import { useAccount, useNetwork } from "wagmi";
 import logo from "../../app/assets/logo.svg";
+import { useParams } from "next/navigation";
 import { NewApplicationIcon, NewPoolIcon } from "./Icons";
+import { useAccount, useNetwork } from "wagmi";
+import Link from "next/link";
 
 export default function Navbar() {
   const params = useParams();
@@ -62,7 +62,6 @@ export default function Navbar() {
                   <h2 className="mt-1 text-xl font-bold tracking-tight text-gray-900 sm:text-2xl py-4 px-2">
                     <span className="text-sky-400">Sea</span>
                     <span className="text-sky-600">Grants</span>
-                    <span className="text-sky-400">Lite</span>
                   </h2>
                 </div>
               </div>

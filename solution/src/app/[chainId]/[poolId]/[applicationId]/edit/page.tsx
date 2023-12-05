@@ -5,7 +5,7 @@ import { ApplicationContextProvider } from "@/context/ApplicationContext";
 import { getMicroGrantQuery, graphqlEndpoint } from "@/utils/query";
 import request from "graphql-request";
 
-export default async function newApplication({
+export default async function EditApplication({
   params,
 }: {
   params: { chainId: string; poolId: string; applicationId: string };
@@ -28,4 +28,4 @@ export default async function newApplication({
       </ApplicationContextProvider>
     </Container>
   );
-};
+}
