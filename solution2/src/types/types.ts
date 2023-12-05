@@ -22,8 +22,8 @@ export interface ICoreContracts {
 }
 
 export interface IStrategyContracts {
-  donationVotingMerklePaout: IContract;
-  directGrantsSimple: IContract;
+  donationVotingMerklePayoutVault: IContract;
+  donationVotingMerklePayoutDirect: IContract;
 }
 
 export interface INetwork {

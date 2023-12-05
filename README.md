@@ -23,17 +23,16 @@ The Allo Protocol is a new way to build applications for funding and allocating 
 
 ## Introduction
 
+The Allo Protocol is a new way to build applications for funding and allocating resources. It is a new way to build applications that are more fair, more transparent, and more open.
+
 
 ## Objectives
 
 By the end of this, developers should be able to:
 
-Write objectives that focus on demonstrating knowledge.
-Write learning objectives that begin with an imperative verb.
-Avoid objectives that start with "Use" or "Understand".
-Rewrite objecives that begin with "Use" by inverting sentence structure.
-End each objective with a period.
-Write objectives on the whiteboard so they can be referenced during a talk.
+- [ ] Understand the essential parts Allo Protocol
+- [ ] Implement the Allo SDK to create a new Strategy(Pool) and Profile
+- [ ] 
 
 
 ## Preparation

@@ -1,4 +1,4 @@
-import { ICoreContracts, INetwork, TNetworkData, Slug, IStrategyContracts } from "@/types/types";
+import { ICoreContracts, INetwork, IStrategyContracts, Slug, TNetworkData } from "@/types/types";
 
 const coreContracts: ICoreContracts = {
   registryImplementation: {
@@ -7,7 +7,7 @@ const coreContracts: ICoreContracts = {
   },
   registryProxy: {
     name: "Registry Proxy",
-    address: "0x0000000000000000000000000000000000000000",
+    address: "0x4AAcca72145e1dF2aeC137E1f3C5E3D75DB8b5f3",
   },
   alloImplementation: {
     name: "Allo Implementation",
@@ -20,13 +20,13 @@ const coreContracts: ICoreContracts = {
 };
 
 const strategyContracts: IStrategyContracts = {
-  donationVotingMerklePaout: {
-    name: "Donation Voting Merkle Paout",
-    address: "0xC88612a4541A28c221F3d03b6Cf326dCFC557C4E",
+  donationVotingMerklePayoutVault: {
+    name: "Donation Voting Merkle Vault Payout",
+    address: "0x68d67bf72fcCf0E0f269C67b934b4050d2917F91",
   },
-  directGrantsSimple: {
-    name: "Direct Grants Simple",
-    address: "0xf243619f931c81617EE00bAAA5c5d97aCcC5af10",
+  donationVotingMerklePayoutDirect: {
+    name: "Donation Voting Merkle Direct Payout",
+    address: "0xD13ec67938B5E9Cb05A05D8e160daF02Ed5ea9C9",
   },
 }
 
