@@ -61,8 +61,17 @@ NOTE: It's a good idea to have students do these steps while you're writing obje
 ## Code Along [20 mins]
 
 1. [5 mins] Create a new Strategy(Pool) using the Allo SDK
+   
+   2. Code-along: `NewPoolContext.tsx` - using the SDK
+ 
 2. [5 mins] Create a new Profile using the Allo SDK
+   
+   1. Code-along: `NewPoolContext.tsx` - using the SDK
+   
 3. [10 mins] Create a new application using the Allo SDK
+
+   1. Code-along: `ApplicationContext.tsx` - using the SDK
+ 
 4. ? out of scope ? [5 mins] Deploy the application to a testnet
 
 
