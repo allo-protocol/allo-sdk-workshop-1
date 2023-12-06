@@ -73,3 +73,4 @@ NOTE: It's a good idea to have students do these steps while you're writing obje
 - [Allo Scan](https://github.com/allo-protocol/allo-scan) - Our first application built on the Allo Protocol, a block explorer showing all the transactions on the Allo Protocol with some basic features.
 - [Sea Grants](https://github.com/allo-protocol/SeaGrants) - Our second application built on the Allo Protocol, a micro-grant style application and funding platform using user defined strategies.
 - [Spec](https://github.com/allo-protocol/allo-v2-spec) - Our indexing service for the Allo Protocol that allows us to query the blockchain for data using GraphQL.
+- [GraphQL Playground](https://alloscan.spec.dev/graphiql) - A GraphQL playground for the Allo Protocol built on top of Spec.
