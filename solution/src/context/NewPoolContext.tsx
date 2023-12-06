@@ -145,7 +145,7 @@ export const NewPoolContextProvider = (props: {
     const chainInfo: any = getChain(chain);
 
     // ToDo: Create an instance of Allo from the SDK
-    // --> snippet
+    // --> snippet - createAlloInstance
 
     // Reset steps
     steps.map((step, index) => {
@@ -196,15 +196,16 @@ export const NewPoolContextProvider = (props: {
     // if profileName is set, create profile
     if (data.profileName && address) {
       // ToDo: Create an instance of the Registry from the SDK
-      // --> snippet
+      // --> snippet - createRegistryInstance
+
 
       const randomNumber = Math.floor(Math.random() * 10000000000);
 
-      // ToDo: Create an instance of the Registry from the SDK
-      // --> snippet
+      // ToDo: Create profile transaction
+      // --> snippet - createProfileTx
 
       try {
-        // ToDo: Create a transaction to create a profile
+        // Create a transaction to create a profile and send with provider
         const tx = await sendTransaction({
           to: txCreateProfile.to as string,
           data: txCreateProfile.data,
@@ -273,10 +274,10 @@ export const NewPoolContextProvider = (props: {
     // 2. Deploy new pool strategy
 
     // ToDo: Create an instance of the MicroGrantsStrategy from the SDK
-    // --> snippet
+    // --> snippet - createMicroGrantsInstance
 
     // ToDo: Get the deploy params for the strategy
-    // --> snippet
+    // --> snippet - getStrategyDeployParams
 
     try {
       const hash = await walletClient!.deployContract({
@@ -379,7 +380,7 @@ export const NewPoolContextProvider = (props: {
     let initStrategyData;
 
     // ToDo: Get the initialize data for the strategy
-    // --> snippet
+    // --> snippet - getInitializeData
     
 
     const poolCreationData = {
@@ -396,7 +397,7 @@ export const NewPoolContextProvider = (props: {
     };
 
     // ToDo: Create a transaction to create a pool with custom strategy
-    // --> snippet
+    // --> snippet - createPoolTx
 
     try {
       const tx = await sendTransaction({

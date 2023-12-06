@@ -54,7 +54,7 @@ NOTE: It's a good idea to have students do these steps while you're writing obje
 
 ## Demo [20 mins]
 
-- [7 mins] Demo Alloscan to show how we set up a block explorer using the Allo SDK
+- ? out of scope ?[7 mins] Demo Alloscan to show how we set up a block explorer using graphql and Spec
 - [13 mins] Demo SeaGrants to show how we set up a grant strategy and application using the Allo SDK
 
 
@@ -71,8 +71,8 @@ NOTE: It's a good idea to have students do these steps while you're writing obje
 3. [10 mins] Create a new application using the Allo SDK
 
    1. Code-along: `ApplicationContext.tsx` - using the SDK
- 
-4. ? out of scope ? [5 mins] Deploy the application to a testnet
+
+4. [] Run the application locally
 
 
 ## Resources

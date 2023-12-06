@@ -1,8 +1,8 @@
 "use client";
-import { MicroGrantsStrategy, Registry } from "@allo-team/allo-v2-sdk/";
 import React, { useState } from "react";
 
 import { MicroGrantsABI } from "@/abi/Microgrants";
+import { RegistryABI } from "@/abi/Registry";
 import {
   EProgressStatus,
   ETarget,
@@ -21,13 +21,11 @@ import {
 import { checkIfRecipientIsIndexedQuery } from "@/utils/query";
 import { getProfileById } from "@/utils/request";
 import {
-  TransactionData,
-  ZERO_ADDRESS,
+  ZERO_ADDRESS
 } from "@allo-team/allo-v2-sdk/dist/Common/types";
 import { sendTransaction } from "@wagmi/core";
 import { decodeEventLog } from "viem";
 import { useAccount } from "wagmi";
-import { RegistryABI } from "@/abi/Registry";
 
 export interface IApplicationContextProps {
   steps: TProgressStep[];
@@ -178,22 +176,15 @@ export const ApplicationContextProvider = (props: {
     updateStepHref(stepIndex, "");
 
     let profileId = data.profileId;
-    const registry = new Registry({ chain: chain });
+    // ToDo: Create instance of registry from SDK
+    // -> snippet
 
     // 1. if profileName is set, create profile
     if (data.profileName && address) {
       const randomNumber = Math.floor(Math.random() * 10000000000);
 
-      const txCreateProfile: TransactionData = await registry.createProfile({
-        nonce: randomNumber,
-        name: data.profileName,
-        metadata: {
-          protocol: BigInt(0),
-          pointer: "",
-        },
-        owner: address,
-        members: [],
-      });
+      // ToDo: Prepare transaction for sending
+      // -> snippet - createProfileTx
 
       try {
         const tx = await sendTransaction({
@@ -265,8 +256,10 @@ export const ApplicationContextProvider = (props: {
 
     // 3. Register application to pool
     let recipientId;
-    const strategy = new MicroGrantsStrategy({ chain, poolId });
     let anchorAddress: string = ZERO_ADDRESS;
+
+    // ToDo: Create instance of microgrants from SDK
+    // -> snippet - createMicroGrantsInstance
 
     if (ethereumHashRegExp.test(profileId || "")) {
       anchorAddress = (
