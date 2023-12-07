@@ -20,6 +20,7 @@ The Allo Protocol is a new way to build applications for funding and allocating 
 - [ ] [Node.js](https://nodejs.org/en/download/)
 - [ ] [Git](https://git-scm.com/downloads)
 - [ ] [Yarn](https://yarnpkg.com/en/docs/install), [NPM](https://www.npmjs.com/get-npm), [PNPM](https://pnpm.js.org/en/installation), or [Bun](https://bun.sh/docs/installation)
+- [ ] (https://pinata.cloud) - create a free Pináta account
 
 ## Introduction [8 mins]
 
