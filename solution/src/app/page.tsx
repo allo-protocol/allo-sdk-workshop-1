@@ -1,60 +1,76 @@
 import PoolList from "@/components/pool/PoolList";
-import { getMicroGrantsQuery, graphqlEndpoint } from "@/utils/query";
+import { getActiveMicroGrantsQuery, getEndedMicroGrantsQuery, getUpcomingMicroGrantsQuery, graphqlEndpoint } from "@/utils/query";
 import request from "graphql-request";
-import { EPoolStatus, TPoolData, TPoolMetadata } from "@/app/types";
+import { TPoolData, TPoolMetadata } from "@/app/types";
 import { getIPFSClient } from "@/services/ipfs";
-import { getPoolStatus } from "@/utils/common";
 import logo from "./assets/logo.svg";
 import Image from "next/image";
+
+enum TPoolType {
+  UPCOMING = "upcoming",
+  ACTIVE = "active",
+  ENDED = "ended",
+}
 
 export default async function Home() {
   const ipfsClient = getIPFSClient();
 
-  let pools: TPoolData[] = [];
-  try {
-    const response: any = await request(
-      graphqlEndpoint,
-      getMicroGrantsQuery,
-      {}
-    );
-    pools = response["microGrants"];
-    for (const pool of pools) {
-      let metadata: TPoolMetadata;
-      try {
-        metadata = await ipfsClient.fetchJson(pool.pool.metadataPointer);
-        pool.pool.metadata = metadata;
-        if (metadata.base64Image) {
-          let poolBanner = await ipfsClient.fetchJson(metadata.base64Image);
-          pool.pool.poolBanner = poolBanner.data;
-        }
-        if (!metadata.name) {
-          metadata.name = `Pool ${pool.poolId}`;
-        }
-      } catch {
-        console.log("IPFS", "Unable to fetch metadata");
-      }
+  const getPools = async (type: TPoolType) => {
+    let pools: TPoolData[] = [];
+
+    let graphqlQuery;
+    let responseObject;
+
+    if (type === TPoolType.UPCOMING) {
+      graphqlQuery = getUpcomingMicroGrantsQuery;
+      responseObject = "upcomingMicroGrants";
+    } else if (type === TPoolType.ACTIVE) {
+      graphqlQuery = getActiveMicroGrantsQuery;
+      responseObject = "activeMicroGrants";
+    } else if (type === TPoolType.ENDED) {
+      graphqlQuery = getEndedMicroGrantsQuery;
+      responseObject = "endedMicroGrants";
+    } else {
+      return pools;
     }
-  } catch (e) {
-    console.log(e);
+
+    try {
+      const response: any = await request(
+        graphqlEndpoint,
+        graphqlQuery,
+        {
+          first: 10,
+          offset: 0
+        }
+      );
+      pools = response[responseObject];
+      for (const pool of pools) {
+        let metadata: TPoolMetadata;
+        try {
+          metadata = await ipfsClient.fetchJson(pool.pool.metadataPointer);
+          pool.pool.metadata = metadata;
+          if (metadata.base64Image) {
+            let poolBanner = await ipfsClient.fetchJson(metadata.base64Image);
+            pool.pool.poolBanner = poolBanner.data;
+          }
+          if (!metadata.name) {
+            metadata.name = `Pool ${pool.poolId}`;
+          }
+        } catch {
+          console.log("IPFS", "Unable to fetch metadata");
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    return pools;
   }
 
-  const upcomingPools = pools.filter(
-    (pool) =>
-      getPoolStatus(pool.allocationStartTime, pool.allocationEndTime) ===
-      EPoolStatus.UPCOMING
-  );
+  const upcomingPools = await getPools(TPoolType.UPCOMING);
 
-  const activePools = pools.filter(
-    (pool) =>
-      getPoolStatus(pool.allocationStartTime, pool.allocationEndTime) ===
-      EPoolStatus.ACTIVE
-  );
-
-  const endedPools = pools.filter(
-    (pool) =>
-      getPoolStatus(pool.allocationStartTime, pool.allocationEndTime) ===
-      EPoolStatus.ENDED
-  );
+  const activePools = await getPools(TPoolType.ACTIVE);
+  
+  const endedPools = await getPools(TPoolType.ENDED);
 
   return (
     <main>

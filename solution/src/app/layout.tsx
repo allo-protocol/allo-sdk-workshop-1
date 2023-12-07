@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "SeaGrants",
-  description: "A micro grants app built on top of the Allo protocol.",
+  description: "A micro grants dApp built on top of the Allo protocol.",
 };
 
 export default function RootLayout({
