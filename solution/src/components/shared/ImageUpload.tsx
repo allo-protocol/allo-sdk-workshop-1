@@ -1,4 +1,5 @@
 import { PhotoIcon } from "@heroicons/react/20/solid";
+import Error from "@/components/shared/Error";
 import { useState } from "react";
 import CropModal from "./CropModal";
 import { aspectRatio } from "@/utils/config";
@@ -13,14 +14,20 @@ const ImageUpload = (props: {
   const [imageFile, setImageFile] = useState(null);
   const [openCropModal, setOpenCropModal] = useState(false);
   const [preview, setPreview] = useState("");
+  const [imgUploadError, setImgUploadError] = useState(false);
 
   const handleFileChange = (e: any) => {
+    setImgUploadError(false);
     const file = e.target.files[0];
-    if (file) {
+
+    const maxSize = 2 * 1024 * 1024; // 2MB in bytes
+
+    if (file.size <= maxSize) {
       setImageFile(file);
       setImageName(file.name);
       setOpenCropModal(true);
     } else {
+      setImgUploadError(true);
       setImageFile(null);
       setImageName("");
     }
@@ -82,11 +89,12 @@ const ImageUpload = (props: {
             </label>
           </div>
           <p className="text-xs leading-5 text-gray-600 mt-2">
-            PNG, JPG up to 5MB
+            PNG, JPG up to 2MB
           </p>
           <p className="text-xs leading-5 text-gray-600 mt-2">
             {imageName ? "File uploaded: " + imageName : ""}
           </p>
+          {imgUploadError && <Error message={"Image exceeds 2MB"} /> }
         </div>
       </div>
       <CropModal

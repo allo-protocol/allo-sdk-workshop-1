@@ -26,30 +26,53 @@ export const checkIfPoolIsIndexedQuery = gql`
   }
 `;
 
-export const getMicroGrantsQuery = gql`
+const microGrantsQuery = `
   {
-    microGrants(orderBy: BLOCK_TIMESTAMP_DESC) {
-      poolId
-      chainId
+    poolId
+    chainId
+    strategy
+    allocationStartTime
+    allocationEndTime
+    approvalThreshold
+    maxRequestedAmount
+    blockTimestamp
+    pool {
       strategy
-      allocationStartTime
-      allocationEndTime
-      approvalThreshold
-      maxRequestedAmount
-      blockTimestamp
-      pool {
-        strategy
-        strategyName
-        tokenMetadata
-        token
-        amount
-        metadataPointer
-        profile {
-          profileId
-          name
-        }
+      strategyName
+      tokenMetadata
+      token
+      amount
+      metadataPointer
+      profile {
+        profileId
+        name
       }
     }
+  }
+`;
+
+export const getActiveMicroGrantsQuery = gql`
+  query getActiveMicroGrantsQuery($first: Int!, $offset: Int!) {
+    activeMicroGrants(
+      orderBy: BLOCK_TIMESTAMP_DESC,
+      first: $first,
+      offset: $offset
+    )
+      ${microGrantsQuery}
+  }
+`;
+
+export const getUpcomingMicroGrantsQuery = gql`
+  query getUpcomingMicroGrantsQuery($first: Int!, $offset: Int!) {
+    upcomingMicroGrants(orderBy: BLOCK_TIMESTAMP_DESC, first: $first, offset: $offset)
+      ${microGrantsQuery}
+  }
+`;
+
+export const getEndedMicroGrantsQuery = gql`
+  query getEndedMicroGrantsQuery($first: Int!, $offset: Int!) {
+    endedMicroGrants(orderBy: BLOCK_TIMESTAMP_DESC, first: $first, offset: $offset)
+      ${microGrantsQuery}
   }
 `;
 

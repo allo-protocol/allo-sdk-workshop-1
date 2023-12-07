@@ -1,17 +1,17 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
 import Navbar from "@/components/shared/Navbar";
-import { WagmiConfig } from "wagmi";
-import { wagmiConfigData, chainData } from "@/services/wagmi";
+import { ApplicationDetailContextProvider } from "@/context/ApplicationDetailContext";
+import { chainData, wagmiConfigData } from "@/services/wagmi";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
-import { ApplicationDetailContextProvider } from "@/context/ApplicationDetailContext";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import { WagmiConfig } from "wagmi";
+import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Micro Grants",
-  description: "A micro grants app built on top of the Allo protocol.",
+  title: "SeaGrants",
+  description: "A micro grants dApp built on top of the Allo protocol.",
 };
 
 export default function RootLayout({
