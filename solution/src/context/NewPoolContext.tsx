@@ -398,6 +398,7 @@ export const NewPoolContextProvider = (props: {
 
     // ToDo: Create a transaction to create a pool with custom strategy
     // --> snippet - createPoolTx
+    
 
     try {
       const tx = await sendTransaction({

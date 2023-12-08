@@ -270,17 +270,11 @@ export const ApplicationContextProvider = (props: {
       ).anchor;
     }
 
-    const registerRecipientData = strategy.getRegisterRecipientData({
-      registryAnchor: anchorAddress as `0x${string}`,
-      recipientAddress: data.recipientAddress as `0x${string}`,
-      requestedAmount: data.requestedAmount,
-      metadata: {
-        protocol: BigInt(1),
-        pointer: pointer.IpfsHash,
-      },
-    });
+    // ToDo: Prepare register recipient transaction for sending
+    // -> snippet - getRegisterRecipientData
 
     try {
+      // Send the transaction
       const tx = await sendTransaction({
         to: registerRecipientData.to as string,
         data: registerRecipientData.data,
