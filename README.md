@@ -19,11 +19,11 @@ The Allo Protocol is a new way to build applications for funding and allocating 
 - [ ] [Yarn](https://yarnpkg.com/en/docs/install), [NPM](https://www.npmjs.com/get-npm), [PNPM](https://pnpm.js.org/en/installation), or [Bun](https://bun.sh/docs/installation)
 - [ ] [Pináta](https://pinata.cloud) - create a free Pináta account
 
-## Introduction [8 mins]
+## Introduction [3 mins]
 
 The Allo Protocol is a new way to build applications for funding and allocating resources. It is a new way to build applications that are more fair, more transparent, and more open.
 
-- [8 mins] Slides: What is the Allo Protocol?
+- [3 mins] Slides: What is the Allo Protocol?
 
 
 ## Objectives
@@ -34,7 +34,7 @@ By the end of this, developers should be able to:
 - [ ] Implement the Allo SDK to read and create a new Strategy(Pool) and Profile
 - [ ] Start building a new application using the Allo SDK
 
-## Preparation [5 mins]
+## Preparation [10 mins]
 
 Note to self: do I need to deploy anything in advance to make this work?
 TODO:
@@ -313,6 +313,10 @@ const registerRecipientData = strategy.getRegisterRecipientData({
 
 1. [5 mins] Run the application locally
 
+
+## Wrap up [5 mins]
+
+todo:
 
 ## Resources
 
