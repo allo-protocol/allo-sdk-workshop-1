@@ -5,11 +5,18 @@ Why am I learning this?
 
 The Allo Protocol is a new way to build applications for funding and allocating resources. It is a new way to build applications that are more fair, more transparent, and more open.
 
+[Slides](https://docs.google.com/presentation/d/19WZyHii1vaGM-M2AxqfXwuOHl-S9OUBT-dupK35ZcyI/edit?usp=sharing)
 
 - **Table of Contents**
   - [Prerequisites](#prerequisites)
   - [Objectives](#objectives)
   - [Resources](#resources)
+
+## Introduction [3 mins]
+
+The Allo Protocol is a new way to build applications for funding and allocating resources. It is a new way to build applications that are more fair, more transparent, and more open.
+
+- [3 mins] Slides: What is the Allo Protocol?
 
 
 ## Prerequisites
@@ -19,11 +26,6 @@ The Allo Protocol is a new way to build applications for funding and allocating 
 - [ ] [Yarn](https://yarnpkg.com/en/docs/install), [NPM](https://www.npmjs.com/get-npm), [PNPM](https://pnpm.js.org/en/installation), or [Bun](https://bun.sh/docs/installation)
 - [ ] [Pináta](https://pinata.cloud) - create a free Pináta account
 
-## Introduction [3 mins]
-
-The Allo Protocol is a new way to build applications for funding and allocating resources. It is a new way to build applications that are more fair, more transparent, and more open.
-
-- [3 mins] Slides: What is the Allo Protocol?
 
 
 ## Objectives
