@@ -1,4 +1,4 @@
-# Allo Protocol Workshop 1Next, we 
+# Allo Protocol Workshop 1
 
 
 Why am I learning this?
@@ -8,10 +8,7 @@ The Allo Protocol is a new way to build applications for funding and allocating 
 
 - **Table of Contents**
   - [Prerequisites](#prerequisites)
-  - [Introduction](#introduction)
   - [Objectives](#objectives)
-  - [Preparation](#preparation)
-  - [Next Steps](#next-steps)
   - [Resources](#resources)
 
 
