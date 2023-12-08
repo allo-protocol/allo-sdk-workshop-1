@@ -64,7 +64,7 @@ TODO:
   git clone https://github.com/allo-protocol/allo-sdk-workshop-1
 
   # Change into the directory
-  cd allo-sdk-workshop-1/solution
+  cd allo-sdk-workshop-1/project
 
   # You should now be in the /solution directory
 
