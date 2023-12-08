@@ -18,6 +18,13 @@ The Allo Protocol is a new way to build applications for funding and allocating 
 
 - [3 mins] Slides: What is the Allo Protocol?
 
+## Objectives
+
+By the end of this, developers should be able to:
+
+- [ ] Understand the essential parts of the Allo Protocol and how they work together with the Allo SDK
+- [ ] Implement the Allo SDK to read and create a new Strategy(Pool) and Profile
+- [ ] Start building a new application using the Allo SDK
 
 ## Prerequisites
 
@@ -26,15 +33,6 @@ The Allo Protocol is a new way to build applications for funding and allocating 
 - [ ] [Yarn](https://yarnpkg.com/en/docs/install), [NPM](https://www.npmjs.com/get-npm), [PNPM](https://pnpm.js.org/en/installation), or [Bun](https://bun.sh/docs/installation)
 - [ ] [Pináta](https://pinata.cloud) - create a free Pináta account
 
-
-
-## Objectives
-
-By the end of this, developers should be able to:
-
-- [ ] Understand the essential parts of the Allo Protocol and how they work together with the Allo SDK
-- [ ] Implement the Allo SDK to read and create a new Strategy(Pool) and Profile
-- [ ] Start building a new application using the Allo SDK
 
 ## Preparation [10 mins]
 
