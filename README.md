@@ -40,59 +40,62 @@ By the end of this, developers should be able to:
       [Bun](https://bun.sh/docs/installation)
 - [ ] [Pináta](https://pinata.cloud) - create a free Pináta account
 
+## Demo [7 mins]
+
+- Demo SeaGrants to show how we set up a grant strategy and application using
+  the Allo SDK
+
 ## Preparation [10 mins]
 
-- [ ] Fork and clone
-      [this](https://github.com/allo-protocol/allo-sdk-workshop-1.git)
-      repository.
+- [1 min] Clone & Checkout `start` branch of
+  [this](https://github.com/allo-protocol/allo-sdk-workshop-1.git) repository.
 
 ```bash
   # Clone the repository
   git clone https://github.com/allo-protocol/allo-sdk-workshop-1
 
   # Change into the directory
-  cd allo-sdk-workshop-1/project
-
-  # You should now be in the /solution directory
+  cd allo-sdk-workshop-1
 
   # Checkout the start branch
   git checkout start
+
+  cd project
+  # You should now be in the /projec directory
 ```
 
-- [ ] Install dependencies with bun/yarn install.
+- [3 mins] Install dependencies with bun/yarn install.
 
 ```bash
   # Install dependencies
   bun install
 
+  # or
+  yarn install
+
+  # or
+  pnpm install
+
   # For NPM specifically you need to use this command
   npm install --legacy-peer-deps
 ```
 
-- [ ] Setup `.env` values
+And to add the Allo SDK we run:
+
 ```bash
-  # General
-  NEXT_PUBLIC_ENVIRONMENT="dev"
+bun install @allo-team/allo-v2-sdk
 
-  # IPFS
-  NEXT_PUBLIC_PINATA_JWT=###
-  NEXT_PUBLIC_IPFS_READ_GATEWAY=###
-  NEXT_PUBLIC_IPFS_WRITE_GATEWAY=###
+  # or
+  yarn install @allo-team/allo-v2-sdk
 
-  # PROVIDER - these are shared keys and may be throttled
-  INFURA_ID=ae484befdd004b64bfe2059d3526a138
-  ALCHEMY_ID=ajWJk5YwtfTZ5vCAhMg8I8L61XFhyJpa
-  PROJECT_ID=31b0b6255ee5cc68ae76cab5fa96a9a0
+  # or
+  pnpm install @allo-team/allo-v2-sdk
 
-  # DATABASE
-  # NEXT_PUBLIC_GRAPHQL_URL=http://localhost:5555/graphql
-  NEXT_PUBLIC_GRAPHQL_URL=https://alloscan.spec.dev/graphql
+  # For NPM specifically you need to use this command
+  npm install @allo-team/allo-v2-sdk --legacy-peer-deps
 ```
 
-## Demo [7 mins]
-
-- [7 mins] Demo SeaGrants to show how we set up a grant strategy and application
-  using the Allo SDK
+- [5 mins] Setup `.env` values
 
 ## Code Along [30 mins]
 
@@ -351,3 +354,5 @@ todo:
   GraphQL.
 - [GraphQL Playground](https://alloscan.spec.dev/graphiql) - A GraphQL
   playground for the Allo Protocol built on top of Spec.
+
+- [Allo Governance Test Token Goerli](https://goerli.etherscan.io/address/0xc55ac684bcB96E2a3aCcE1f1F1300dD32Cd8bA06)
