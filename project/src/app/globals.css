@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+.text-yellow-600 {
+  color: #D97706; /* This is the hex code for yellow-600 in Tailwind */
+}
+.bg-yellow-50 {
+  background-color: #FFFBEB; /* This is the hex code for yellow-50 in Tailwind */
+}
+.ring-yellow-600-20 {
+  --tw-ring-color: rgba(217, 119, 6, 0.2); /* This is the rgba value for yellow-600 with 20% opacity */
+  box-shadow: 0 0 0 1px var(--tw-ring-color);
+}
+
+.text-gray-600 {
+  color: #4B5563; /* Hex code for gray-600 in Tailwind */
+}
+.bg-gray-50 {
+  background-color: #F9FAFB; /* Hex code for gray-50 in Tailwind */
+}
+.ring-gray-500-10 {
+  --tw-ring-color: rgba(107, 114, 128, 0.1); /* RGBA value for gray-500 */
+  box-shadow: 0 0 0 1px var(--tw-ring-color);
+}
+
+.text-green-700 {
+  color: #047857; /* Hex code for green-700 in Tailwind */
+}
+.bg-green-50 {
+  background-color: #F0FFF4; /* Hex code for green-50 in Tailwind */
+}
+.ring-green-600-20 {
+  --tw-ring-color: rgba(5, 150, 105, 0.2); /* RGBA value for green-600 with 20% opacity in Tailwind */
+  box-shadow: 0 0 0 1px var(--tw-ring-color);
+}
+
+.text-blue-700 {
+  color: #185ADB; /* Hex code for blue-700 in Tailwind */
+}
+.bg-blue-50 {
+  background-color: #EFF6FF; /* Hex code for blue-50 in Tailwind */
+}
+.ring-blue-600-20 {
+  --tw-ring-color: rgba(59, 130, 246, 0.2); /* RGBA value for blue-600 with 20% opacity in Tailwind */
+  box-shadow: 0 0 0 3px var(--tw-ring-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0; */
+  }
+}
+
+.react-mde {
+  border-radius: 0.375rem !important;
+
+  .mde-header {
+    background: #fff;
+    border-bottom: 0;
+    font-size: small;
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+
+    .mde-tabs {
+      margin: 1px;
+    }
+
+    .selected {
+      border-radius: 5px;
+    }
+  }
+
+  .mde-text {
+    font-size: 0.875rem;
+  }
+
+  .image-tip {
+    background: #fff;
+    border-bottom-left-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+  }
+}
+
+.mde-preview h1,
+.mde-preview h2,
+.mde-preview p,
+.mde-textarea-wrapper textarea {
+  font-size: inherit !important;
+}
+
+.mde-preview h1,
+.mde-preview h2,
+.mde-preview p {
+  border-bottom: 0 !important;
+}
+
+.mde-preview {
+  .mde-preview-content {
+    padding: 0 !important;
+  }
+}
+
+.react-mde {
+  .mde-preview {
+    .mde-preview-content {
+      padding: 10px !important;
+    }
+  }
+}
+
+*:disabled {
+  opacity: 0.5;
+}
+
+a {
+  color: #5a67d8;
+  &:hover {
+    color: #667eea;
+  }
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
+  border: 3px solid;
+  border-color: #38bdf8 #38bdf8 transparent transparent;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+.loader::after,
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  border: 3px solid;
+  border-color: transparent transparent #0284c7 #0284c7;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: rotationBack 0.5s linear infinite;
+  transform-origin: center center;
+}
+.loader::before {
+  width: 32px;
+  height: 32px;
+  border-color: #38bdf8 #38bdf8 transparent transparent;
+  animation: rotation 1.5s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes rotationBack {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-360deg);
+  }
+}
