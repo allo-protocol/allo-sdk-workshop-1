@@ -47,6 +47,8 @@ By the end of this, developers should be able to:
 
 ## Preparation [10 mins]
 
+- You can fork first before you clone the repository [here](https://github.com/codenamejason/allo-sdk-workshop-1/fork)
+
 - [1 min] Clone & Checkout `start` branch of
   [this](https://github.com/allo-protocol/allo-sdk-workshop-1.git) repository.
 
