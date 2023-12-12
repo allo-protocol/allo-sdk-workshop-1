@@ -1,40 +1,22 @@
 "use client";
 
+import { createPool } from "@/sdk/allo";
+import { createProfile } from "@/sdk/registry";
+import { chainData, wagmiConfigData } from "@/services/wagmi";
 import {
-    ConnectButton,
-    RainbowKitProvider,
-    getDefaultWallets,
-    midnightTheme,
+  ConnectButton,
+  RainbowKitProvider,
+  midnightTheme,
 } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import Link from "next/link";
-import { WagmiConfig, configureChains, createConfig } from "wagmi";
-import { arbitrum, base, mainnet, optimism, zora } from "wagmi/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
-
-const { chains, publicClient } = configureChains(
-  [mainnet, optimism, arbitrum, base, zora],
-  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID ?? "" }), publicProvider()]
-);
-
-const { connectors } = getDefaultWallets({
-  appName: "My RainbowKit App",
-  projectId: "YOUR_PROJECT_ID",
-  chains,
-});
-
-const wagmiConfig = createConfig({
-  autoConnect: true,
-  connectors,
-  publicClient,
-});
+import { WagmiConfig } from "wagmi";
 
 const Home = () => {
   return (
-    <WagmiConfig config={wagmiConfig}>
+    <WagmiConfig config={wagmiConfigData}>
       <RainbowKitProvider
-        chains={chains}
+        chains={chainData}
         modalSize="wide"
         theme={midnightTheme()}
       >
@@ -51,6 +33,39 @@ const Home = () => {
 
           <div className="relative flex place-items-center text-5xl before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
             Allo
+          </div>
+          <div className="-mt-40">
+            A general purpose protocol for the efficient allocation of capital.
+          </div>
+
+          <div>
+            <div className="flex flex-row">
+              <button
+                onClick={() =>
+                  createProfile().then((res: any) => {
+                    console.log("Profile ID: ", res);
+                    alert("Profile created with ID: " + res);
+                  })
+                }
+                className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2"
+              >
+                Create Profile
+              </button>
+              <button
+                onClick={() => {
+                  createPool().then((res: any) => {
+                    console.log("Pool ID: ", res);
+                    alert("Pool created with ID: " + res);
+                  });
+                }}
+                className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2"
+              >
+                Create Pool
+              </button>
+              <button className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2">
+                Apply to Pool
+              </button>
+            </div>
           </div>
 
           <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-3">
