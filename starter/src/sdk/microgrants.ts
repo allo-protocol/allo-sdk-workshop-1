@@ -37,7 +37,9 @@ export const strategy = new MicroGrantsStrategy({
   // poolId: 81,
 });
 
-export const deployParams = strategy.getDeployParams("MicroGrants");
+export const deployParams = strategy.getDeployParams("MicroGrantsv1");
+
+console.log("deployParams", deployParams);
 
 export const deployMicrograntsStrategy = async (
   pointer: any,
