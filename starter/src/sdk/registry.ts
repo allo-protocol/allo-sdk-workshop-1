@@ -13,6 +13,7 @@ import { sendTransaction } from "@wagmi/core";
 export const createProfile = async () => {
   // prepare the profile arguments, these are specifically typed and will fail if not correct.
   // We import the type from the SDK to ensure we are using the correct type.
+  // todo: update the members and owner to your own address(es)
   const createProfileArgs: CreateProfileArgs = {
     nonce: Math.floor(Math.random() * 1000000),
     name: "Allo Workshop",

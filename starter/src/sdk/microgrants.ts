@@ -62,7 +62,7 @@ export const deployMicrograntsStrategy = async (
     console.error("Deploying Strategy", e);
   }
 
-  // NOTE: Timestamps should be in seconds and start should be a few minutes in the future to account for transaction times.
+  // NOTE: Timestamps should be in seconds and start should be a few minutes in the future to account for transaction times.7
   const startDateInSeconds = Math.floor(new Date().getTime() / 1000) + 300;
   const endDateInSeconds = Math.floor(new Date().getTime() / 1000) + 10000;
 
@@ -76,7 +76,7 @@ export const deployMicrograntsStrategy = async (
 
   // get the init data
   // todo: snippet => getInitializeData
-  
+
   const poolCreationData = {
     profileId: profileId,
     strategy: strategyAddress,
@@ -205,7 +205,8 @@ export const createApplication = async (
   if (chain !== 5) return "0x";
 
   // Set some allocators for demo
-  const allocatorData: SetAllocatorData[] = [
+  // todo: Import type from SDK - SetAllocatorData[]
+  const allocatorData = [
     {
       allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
       flag: true,

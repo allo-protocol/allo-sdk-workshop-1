@@ -85,7 +85,7 @@ By the end of this, developers should be able to:
 And to add the Allo SDK we run:
 
 ```bash
-bun install @allo-team/allo-v2-sdk
+  bun install @allo-team/allo-v2-sdk
 
   # or
   yarn install @allo-team/allo-v2-sdk
@@ -104,12 +104,13 @@ bun install @allo-team/allo-v2-sdk
 1. [15-20 mins] Create a new Strategy(Pool), Create a new Pool & Profile (A
    profile is required to create a pool on Allo)
 
-- Code-along: `NewPoolContext.tsx`
+- Code-along: `allo.ts`, `registry.ts` & `microgrants.ts`
 
 To create a new Allo instance, you need to provide the chain information. In
 this example, we're using the 5 (Goerli) chain information (see supported chains
 [here](https://github.com/allo-protocol/allo-v2/blob/main/contracts/README.md)).
 
+In `allo.ts`:
 ```javascript
 // Importy Allo from SDK
 import { Allo } from "@allo-team/allo-v2-sdk/";
@@ -122,6 +123,7 @@ To create a new Registry instance, you need to provide the chain information. In
 this example, we're using the 5 (Goerli) chain information (see supported chains
 [here](https://github.com/allo-protocol/allo-v2/blob/main/contracts/README.md)).
 
+In `registry.ts`:
 ```javascript
 // Importy Registry from SDK
 import { Registry } from "@allo-team/allo-v2-sdk/";
@@ -131,24 +133,24 @@ const registry = new Registry({ chain: 5 });
 ```
 
 To create a new profile using the `createProfile` function:
-
 ```javascript
 import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 // Prepare the transaction arguments
 const createProfileArgs: CreateProfileArgs = {
-  nonce: 3,
-  name: "Developer",
+  nonce: Math.floor(Math.random() * 1000000),
+  name: "Allo Workshop",
   metadata: {
     protocol: BigInt(1),
     pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
   },
-  owner: "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
   members: [
     "0x5cdb35fADB8262A3f88863254c870c2e6A848CcA",
     "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
+    "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
   ],
+  owner: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
 };
 
 // Create the transaction with the arguments
@@ -165,7 +167,7 @@ console.log(`Transaction hash: ${hash}`);
 ```
 
 To start interacting with the MicroGrants contract, create a new instance of
-`MicroGrantsStrategy`:
+MicroGrantsStrategy in `microgrants.ts`:
 
 ```javascript
 import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
@@ -175,7 +177,7 @@ const strategy = new MicroGrantsStrategy({
 });
 ```
 
-If you are aware of the poolId, you can load that while creating the instance
+📝 If you are aware of the poolId, you can load that while creating the instance
 
 ```javascript
 import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
@@ -188,10 +190,12 @@ const strategy = new MicroGrantsStrategy({
 
 ### Get the strategy deploy parameters
 
+In `microgrants.ts`:
 ```javascript
 import { StrategyType } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
 
-const strategyType = StrategyType.Gov; // Specify the strategy type
+// Specify the strategy type - MicroGrants for default/demo purposes
+const strategyType = StrategyType.MicroGrants; 
 const deployParams = strategy.getDeployParams(strategyType);
 
 // Client could be from ethers, viem, etc.
@@ -205,20 +209,12 @@ const hash = await walletClient!.deployContract({
 ### Get the initialize data
 
 ```javascript
-if (data.strategyType === StrategyType.MicroGrants) {
-  initStrategyData = await strategy.getInitializeData(initParams);
-} else if (data.strategyType === StrategyType.Hats) {
-  initStrategyData = await strategy.getInitializeDataHats(initParams);
-} else if (data.strategyType === StrategyType.Gov) {
-  initStrategyData = await strategy.getInitializeDataGov(initParams);
-} else {
-  throw new Error("Invalid strategy type");
-}
+initStrategyData = await strategy.getInitializeData(initParams);
 ```
 
 ### Create the pool transaction
 
-To create a new pool:
+In `microgrants.ts` create a new pool:
 
 ```typescript
 import { CreatePoolArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
@@ -251,93 +247,25 @@ console.log(`Transaction hash: ${hash}`);
 
 1. [10 mins] Create a new application
 
-- Code-along: `ApplicationContext.tsx`
-
-To create a new Registry instance, you need to provide the chain information. In
-this example, we're using the 5 (Goerli) chain information (see supported chains
-[here](https://github.com/allo-protocol/allo-v2/blob/main/contracts/README.md)).
-
-```javascript
-// Importy Registry from SDK
-import { Registry } from "@allo-team/allo-v2-sdk/";
-
-// Create a new Registry instance
-const registry = new Registry({ chain: 5 });
-```
-
-To create a new profile using the `createProfile` function:
-
-```javascript
-import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
-import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
-
-// Prepare the transaction arguments
-const createProfileArgs: CreateProfileArgs = {
-  nonce: 3,
-  name: "Developer",
-  metadata: {
-    protocol: BigInt(1),
-    pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
-  },
-  owner: "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
-  members: [
-    "0x5cdb35fADB8262A3f88863254c870c2e6A848CcA",
-    "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
-  ],
-};
-
-// Create the transaction with the arguments
-const txData: TransactionData = registry.createProfile(createProfileArgs);
-
-// Client could be from ethers, viem, etc..
-const hash = await client.sendTransaction({
-  data: txData.data,
-  account,
-  value: BigInt(txData.value),
-});
-
-console.log(`Transaction hash: ${hash}`);
-```
-
-To start interacting with the MicroGrants contract, create a new instance of
-`MicroGrantsStrategy`:
-
-```javascript
-import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
-
-const strategy = new MicroGrantsStrategy({
-  chain: 5,
-});
-```
-
-If you are aware of the poolId, you can load that while creating the instance
-
-```javascript
-import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
-
-const strategy = new MicroGrantsStrategy({
-  chain: 5,
-  poolId: 1, // valid pool Id
-});
-```
-
+### Register a recipient
+- Code-along: `microgrants.ts`
 ```javascript
 const registerRecipientData = strategy.getRegisterRecipientData({
-      registryAnchor: anchorAddress as `0x${string}`,
-      recipientAddress: data.recipientAddress as `0x${string}`,
-      requestedAmount: data.requestedAmount,
-      metadata: {
-        protocol: BigInt(1),
-        pointer: pointer.IpfsHash,
-      },
-    });
+  registryAnchor: anchorAddress as `0x${string}`,
+  recipientAddress: data.recipientAddress as `0x${string}`,
+  requestedAmount: data.requestedAmount,
+  metadata: {
+    protocol: BigInt(1),
+    pointer: pointer.IpfsHash,
+  },
+});
 ```
 
 1. [5 mins] Run the application locally
 
 ## Wrap up [5 mins]
 
-todo:
+- [5 mins] Q&A
 
 ## Resources
 
