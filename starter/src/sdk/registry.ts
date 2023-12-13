@@ -12,7 +12,7 @@ export const registry = new Registry({ chain: 5 });
 export const createProfile = async () => {
   // prepare the arguments
   const createProfileArgs: CreateProfileArgs = {
-    nonce: Math.floor(Math.random() * 1000000),
+    nonce: Math.floor(Math.random() * 10000),
     name: "Allo Workshop",
     metadata: {
       protocol: BigInt(1),
@@ -25,6 +25,8 @@ export const createProfile = async () => {
     ],
     owner: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
   };
+
+  console.log("Creating profile with args: ", createProfileArgs);
 
   // create the transaction with the arguments
   const txData: TransactionData = await registry.createProfile(
@@ -51,8 +53,3 @@ export const createProfile = async () => {
 
   return profileId;
 };
-
-// const profile = await getProfileById({
-//   chainId: chain.toString(),
-//   profileId: data.profileId!.toLowerCase(),
-// });

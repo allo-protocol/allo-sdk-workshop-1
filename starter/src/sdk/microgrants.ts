@@ -39,7 +39,7 @@ export const strategy = new MicroGrantsStrategy({
 
 export const deployParams = strategy.getDeployParams("MicroGrantsv1");
 
-console.log("deployParams", deployParams);
+// console.log("deployParams", deployParams);
 
 export const deployMicrograntsStrategy = async (
   pointer: any,
@@ -222,34 +222,6 @@ export const batchSetAllocator = async (data: SetAllocatorData[]) => {
   }
 };
 
-export const allocate = async (data: Allocation) => {
-  if (strategy) {
-    // const chainInfo: any | unknown = getChain(5);
-
-    strategy.setPoolId(81);
-    const txData: TransactionData = strategy.getAllocationData(
-      data.recipientId,
-      data.status
-    );
-
-    try {
-      const tx = await sendTransaction({
-        to: txData.to as string,
-        data: txData.data,
-        value: BigInt(txData.value),
-      });
-
-      await wagmiConfigData.publicClient.waitForTransactionReceipt({
-        hash: tx.hash,
-      });
-
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-    } catch (e) {
-      console.log("Allocating", e);
-    }
-  }
-};
-
 export const createApplication = async (
   data: TNewApplication,
   chain: number,
@@ -388,4 +360,32 @@ export const createApplication = async (
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
   return recipientId;
+};
+
+export const allocate = async (data: Allocation) => {
+  if (strategy) {
+    // const chainInfo: any | unknown = getChain(5);
+
+    strategy.setPoolId(81);
+    const txData: TransactionData = strategy.getAllocationData(
+      data.recipientId,
+      data.status
+    );
+
+    try {
+      const tx = await sendTransaction({
+        to: txData.to as string,
+        data: txData.data,
+        value: BigInt(txData.value),
+      });
+
+      await wagmiConfigData.publicClient.waitForTransactionReceipt({
+        hash: tx.hash,
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+    } catch (e) {
+      console.log("Allocating", e);
+    }
+  }
 };
