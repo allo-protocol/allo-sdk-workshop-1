@@ -65,7 +65,7 @@ export default class IPFSClient {
       pinataMetadata: {
         name,
         keyvalues: {
-          app: "micro-grants",
+          app: "allo-starter-kit",
         },
       },
     };
@@ -73,7 +73,7 @@ export default class IPFSClient {
 
   async pinJSON(object: any) {
     const data = {
-      ...this.baseRequestData("micro-grants"),
+      ...this.baseRequestData("allo-starter-kit"),
       pinataContent: object,
     };
 

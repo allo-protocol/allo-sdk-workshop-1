@@ -1,8 +1,12 @@
 "use client";
 
+import { TNewApplication } from "@/app/types";
 import { createPool } from "@/sdk/allo";
+import { createApplication } from "@/sdk/microgrants";
 import { createProfile } from "@/sdk/registry";
 import { chainData, wagmiConfigData } from "@/services/wagmi";
+import { Allocation } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
+import { Status } from "@allo-team/allo-v2-sdk/dist/strategies/types";
 import {
   ConnectButton,
   RainbowKitProvider,
@@ -10,9 +14,29 @@ import {
 } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import Link from "next/link";
+import { parseUnits } from "viem";
 import { WagmiConfig } from "wagmi";
 
 const Home = () => {
+  const profileId =
+    "0x0aa2b47aa154688c11623fa2853f56c245684efd8c530047163775f5e0b304a5";
+  const _newApplicationData: TNewApplication = {
+    name: "Test Application",
+    website: "https://docs.allo.gitcoin.co",
+    description: "Test Application Description",
+    email: "test@gitcoin.co",
+    requestedAmount: parseUnits("0.1", 18),
+    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    base64Image: "",
+    profileName: "",
+    profileId: profileId,
+  };
+
+  const _allocationData: Allocation = {
+    recipientId: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    status: Status.Accepted,
+  };
+
   return (
     <WagmiConfig config={wagmiConfigData}>
       <RainbowKitProvider
@@ -20,7 +44,7 @@ const Home = () => {
         modalSize="wide"
         theme={midnightTheme()}
       >
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
+        <main className="flex min-h-screen flex-col items-center justify-between p-2">
           <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
             <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
               Get started by editing&nbsp;
@@ -54,17 +78,39 @@ const Home = () => {
               <button
                 onClick={() => {
                   createPool().then((res: any) => {
-                    console.log("Pool ID: ", res);
-                    alert("Pool created with ID: " + res);
+                    console.log("Pool ID: ", res.poolId);
+                    alert("Pool created with ID: " + res.poolId);
                   });
                 }}
                 className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2"
               >
                 Create Pool
               </button>
-              <button className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2">
+              <button
+                onClick={() => {
+                  createApplication(_newApplicationData, 5, 81).then(
+                    (res: any) => {
+                      console.log("Recipient ID: ", res.recipientId);
+                      alert("Applied with ID: " + res.recipientId);
+                    }
+                  );
+                }}
+                className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2"
+              >
                 Apply to Pool
               </button>
+              {/* WIP */}
+              {/* <button
+                onClick={() => {
+                  allocate(_allocationData).then((res: any) => {
+                    console.log("Recipient ID: ", res.recipientId);
+                    alert("Applied with ID: " + res.recipientId);
+                  });
+                }}
+                className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2"
+              >
+                Allocate to Pool
+              </button> */}
             </div>
           </div>
 
