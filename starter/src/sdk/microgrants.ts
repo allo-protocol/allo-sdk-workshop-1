@@ -27,19 +27,17 @@ import {
   waitForTransaction,
 } from "@wagmi/core";
 import { decodeEventLog } from "viem";
-import { allo } from "./allo";
-// import { StrategyType } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
+// import { allo } from "./allo";
 
-// "0xb79772d36362c27a56e9f0d914af6dbb0e5a9a07" pool 81
+// create a strategy instance
+// todo: snippet => createStrategyInstance
 
-export const strategy = new MicroGrantsStrategy({
-  chain: 5,
-  // poolId: 81,
-});
-
-export const deployParams = strategy.getDeployParams("MicroGrantsv1");
-
-console.log("deployParams", deployParams);
+// NOTE: This is the deploy params for the MicroGrantsv1 contract
+// 🚨 Please make sure your strategy type is correct or Spec will not index it.
+// MicroGrants: "MicroGrantsv1"
+// Hats: "MicroGrantsHatsv1"
+// Gov: "MicroGrantsGovv1"
+// todo: snippet => deployParams
 
 export const deployMicrograntsStrategy = async (
   pointer: any,
@@ -64,57 +62,7 @@ export const deployMicrograntsStrategy = async (
     console.error("Deploying Strategy", e);
   }
 
-  // NOTE: Set this up for token allowances when not the native token
-  // if (data.tokenAddress !== NATIVE) {
-  //   const allowance = await wagmiConfigData.publicClient.readContract({
-  //     address: data.tokenAddress,
-  //     abi: abi,
-  //     functionName: "allowance",
-  //     args: [address, allo.address()],
-  //   });
-
-  //   if ((allowance as bigint) <= BigInt(data.fundPoolAmount)) {
-  //     const approvalAmount =
-  //       BigInt(data.fundPoolAmount) - (allowance as bigint);
-
-  //     const approveData = encodeFunctionData({
-  //       abi: abi,
-  //       functionName: "approve",
-  //       args: [allo.address(), approvalAmount],
-  //     });
-
-  //     try {
-  //       const tx = await sendTransaction({
-  //         to: data.tokenAddress,
-  //         data: approveData,
-  //         value: BigInt(0),
-  //       });
-
-  //       await wagmiConfigData.publicClient.waitForTransactionReceipt({
-  //         hash: tx.hash,
-  //         confirmations: 2,
-  //       });
-
-  //       updateStepHref(
-  //         stepIndex,
-  //         `${chainInfo.blockExplorers.default.url}/tx/` + tx.hash
-  //       );
-  //       updateStepStatus(stepIndex, true);
-  //     } catch (e) {
-  //       updateStepStatus(stepIndex, false);
-  //       console.log("Approving Token", e);
-  //     }
-  //   } else {
-  //     updateStepContent(stepIndex, "Token already approved on ");
-  //     updateStepStatus(stepIndex, true);
-  //   }
-  // } else {
-  //   updateStepContent(stepIndex, "Approval not needed on ");
-  //   updateStepStatus(stepIndex, true);
-  // }
-
-  console.log("date", new Date());
-
+  // NOTE: Timestamps should be in seconds and start should be a few minutes in the future to account for transaction times.
   const startDateInSeconds = Math.floor(new Date().getTime() / 1000) + 300;
   const endDateInSeconds = Math.floor(new Date().getTime() / 1000) + 10000;
 
@@ -126,9 +74,9 @@ export const deployMicrograntsStrategy = async (
     maxRequestedAmount: BigInt(1e13),
   };
 
-  console.log("initParams", initParams);
-
-  const initStrategyData = await strategy.getInitializeData(initParams);
+  // get the init data
+  // todo: snippet => getInitializeData
+  
   const poolCreationData = {
     profileId: profileId,
     strategy: strategyAddress,
@@ -147,9 +95,8 @@ export const deployMicrograntsStrategy = async (
     ],
   };
 
-  const createPoolData = await allo.createPoolWithCustomStrategy(
-    poolCreationData
-  );
+  // Prepare the transaction data
+  // todo: snippet => createPoolWithCustomStrategy
 
   try {
     const tx = await sendTransaction({

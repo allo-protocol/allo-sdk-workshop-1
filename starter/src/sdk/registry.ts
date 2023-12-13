@@ -1,16 +1,18 @@
 import { RegistryABI } from "@/abi/Registry";
 import { wagmiConfigData } from "@/services/wagmi";
 import { getEventValues } from "@/utils/common";
-import { Registry } from "@allo-team/allo-v2-sdk";
-import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
+// import { Registry } from "@allo-team/allo-v2-sdk";
+// import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 import { sendTransaction } from "@wagmi/core";
 
-export const registry = new Registry({ chain: 5 });
+// create a new instance of Registry
+// todo: snippet => createRegistryInstance
 
 // NOTE: Update this function to use your own data.
 export const createProfile = async () => {
-  // prepare the arguments
+  // prepare the profile arguments, these are specifically typed and will fail if not correct.
+  // We import the type from the SDK to ensure we are using the correct type.
   const createProfileArgs: CreateProfileArgs = {
     nonce: Math.floor(Math.random() * 1000000),
     name: "Allo Workshop",
@@ -27,9 +29,7 @@ export const createProfile = async () => {
   };
 
   // create the transaction with the arguments
-  const txData: TransactionData = await registry.createProfile(
-    createProfileArgs
-  );
+  // todo: snippet => createProfileTX
 
   const txHash = await sendTransaction({
     to: txData.to,
@@ -51,8 +51,3 @@ export const createProfile = async () => {
 
   return profileId;
 };
-
-// const profile = await getProfileById({
-//   chainId: chain.toString(),
-//   profileId: data.profileId!.toLowerCase(),
-// });
