@@ -12,7 +12,6 @@ import {
 } from "@/utils/common";
 import { checkIfRecipientIsIndexedQuery } from "@/utils/query";
 import { getProfileById } from "@/utils/request";
-import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
 import {
   TransactionData,
   ZERO_ADDRESS,
@@ -39,6 +38,9 @@ import { decodeEventLog } from "viem";
 // Gov: "MicroGrantsGovv1"
 // todo: snippet => deployParams
 
+// This is called from `allo.ts` and is used to deploy the strategy contract and create a pool.
+// It is recommended you split this out into two functions, one to deploy the strategy and one to create the pool
+// for a more usable application.
 export const deployMicrograntsStrategy = async (
   pointer: any,
   profileId: string
@@ -206,14 +208,15 @@ export const createApplication = async (
 
   // Set some allocators for demo
   // todo: Import type from SDK - SetAllocatorData[]
-  const allocatorData = [
+  const allocatorData: SetAllocatorData[] = [
     {
       allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
       flag: true,
     },
   ];
 
-  // await batchSetAllocator(allocatorData);
+  // todo: set the allocators defined above
+  await batchSetAllocator(allocatorData);
 
   console.log("Allocators set");
 
@@ -251,7 +254,9 @@ export const createApplication = async (
 
   // 3. Register application to pool
   let recipientId;
-  const strategy = new MicroGrantsStrategy({ chain, poolId });
+
+  // todo: snippet => createStrategyInstanceWithPoolId
+
   let anchorAddress: string = ZERO_ADDRESS;
 
   if (ethereumHashRegExp.test(profileId || "")) {
@@ -265,15 +270,7 @@ export const createApplication = async (
 
   console.log("anchorAddress", anchorAddress);
 
-  const registerRecipientData = strategy.getRegisterRecipientData({
-    registryAnchor: "0xcff0fdff14df9d00822279270e7ec87984151a84", // anchorAddress as `0x${string}`,
-    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42", // data.recipientAddress as `0x${string}`,
-    requestedAmount: BigInt(1e13), // data.requestedAmount,
-    metadata: {
-      protocol: BigInt(1),
-      pointer: pointer.IpfsHash,
-    },
-  });
+  // todo: snippet => getRegisterRecipientData
 
   console.log("registerRecipientData", registerRecipientData);
 
