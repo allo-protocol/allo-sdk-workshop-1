@@ -88,6 +88,7 @@ const Home = () => {
               </button>
               <button
                 onClick={() => {
+                  // todo: add your new created poolID
                   createApplication(_newApplicationData, 5, 81).then(
                     (res: any) => {
                       console.log("Recipient ID: ", res.recipientId);

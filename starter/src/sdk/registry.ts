@@ -1,8 +1,6 @@
 import { RegistryABI } from "@/abi/Registry";
 import { wagmiConfigData } from "@/services/wagmi";
 import { getEventValues } from "@/utils/common";
-// import { Registry } from "@allo-team/allo-v2-sdk";
-// import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 import { sendTransaction } from "@wagmi/core";
 
@@ -26,6 +24,7 @@ export const createProfile = async () => {
       "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
       "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
     ],
+    // the wallet your connecting with
     owner: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
   };
 

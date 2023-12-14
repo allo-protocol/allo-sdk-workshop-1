@@ -12,6 +12,7 @@ import {
 } from "@/utils/common";
 import { checkIfRecipientIsIndexedQuery } from "@/utils/query";
 import { getProfileById } from "@/utils/request";
+// import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
 import {
   TransactionData,
   ZERO_ADDRESS,
@@ -146,7 +147,6 @@ export const deployMicrograntsStrategy = async (
 
 export const batchSetAllocator = async (data: SetAllocatorData[]) => {
   if (strategy) {
-    // const chainInfo: any | unknown = getChain(5);
     const strategyAddress = await allo.getStrategy(81);
     console.log("strategyAddress", strategyAddress);
 
@@ -207,7 +207,7 @@ export const createApplication = async (
   if (chain !== 5) return "0x";
 
   // Set some allocators for demo
-  // todo: Import type from SDK - SetAllocatorData[]
+  // NOTE: Import type from SDK - SetAllocatorData[]
   const allocatorData: SetAllocatorData[] = [
     {
       allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
@@ -271,6 +271,15 @@ export const createApplication = async (
   console.log("anchorAddress", anchorAddress);
 
   // todo: snippet => getRegisterRecipientData
+  const registerRecipientData = strategy.getRegisterRecipientData({
+    registryAnchor: "0xcff0fdff14df9d00822279270e7ec87984151a84", // anchorAddress as `0x${string}`,
+    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42", // data.recipientAddress as `0x${string}`,
+    requestedAmount: BigInt(1e13), // data.requestedAmount,
+    metadata: {
+      protocol: BigInt(1),
+      pointer: pointer.IpfsHash,
+    },
+  });
 
   console.log("registerRecipientData", registerRecipientData);
 
