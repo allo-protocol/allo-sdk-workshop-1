@@ -140,11 +140,7 @@ export const deployMicrograntsStrategy = async (
       protocol: BigInt(1),
       pointer: pointer.IpfsHash,
     },
-    managers: [
-      "0x5cdb35fADB8262A3f88863254c870c2e6A848CcA",
-      "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
-      "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
-    ],
+    managers: ["0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42"],
   };
 
   const createPoolData = await allo.createPoolWithCustomStrategy(
@@ -238,8 +234,7 @@ export const createApplication = async (
       flag: true,
     },
   ];
-
-  // await batchSetAllocator(allocatorData);
+  await batchSetAllocator(allocatorData);
 
   console.log("Allocators set");
 
