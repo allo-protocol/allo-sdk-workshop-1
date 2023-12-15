@@ -6,7 +6,10 @@ import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 import { sendTransaction } from "@wagmi/core";
 
-export const registry = new Registry({ chain: 5 });
+export const registry = new Registry({
+  chain: 421614,
+  rpc: "https://arb-sepolia.g.alchemy.com/v2/SLqkAkF6od4OWU62e-XWbuzmKvwjehYp",
+});
 
 // NOTE: Update this function to use your own data.
 export const createProfile = async () => {

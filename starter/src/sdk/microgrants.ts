@@ -33,8 +33,8 @@ import { allo } from "./allo";
 // "0xb79772d36362c27a56e9f0d914af6dbb0e5a9a07" pool 81
 
 export const strategy = new MicroGrantsStrategy({
-  chain: 5,
-  // poolId: 81,
+  chain: 421614,
+  rpc: "https://arb-sepolia.g.alchemy.com/v2/SLqkAkF6od4OWU62e-XWbuzmKvwjehYp",
 });
 
 export const deployParams = strategy.getDeployParams("MicroGrantsv1");
@@ -45,7 +45,7 @@ export const deployMicrograntsStrategy = async (
   pointer: any,
   profileId: string
 ) => {
-  const walletClient = await getWalletClient({ chainId: 5 });
+  const walletClient = await getWalletClient({ chainId: 421614 });
   // const profileId = await createProfile();
 
   let strategyAddress: string = "0x";
@@ -58,7 +58,7 @@ export const deployMicrograntsStrategy = async (
       args: [],
     });
 
-    const result = await waitForTransaction({ hash: hash, chainId: 5 });
+    const result = await waitForTransaction({ hash: hash, chainId: 421614 });
     strategyAddress = result.contractAddress!;
   } catch (e) {
     console.error("Deploying Strategy", e);
@@ -170,7 +170,7 @@ export const deployMicrograntsStrategy = async (
 
     // NOTE: Index Pool Example
     // const pollingData: any = {
-    //   chainId: 5,
+    //   chainId: 421614,
     //   poolId: poolId,
     // };
     // let pollingResult = await pollUntilDataIsIndexed(
@@ -197,12 +197,14 @@ export const deployMicrograntsStrategy = async (
 
 export const batchSetAllocator = async (data: SetAllocatorData[]) => {
   if (strategy) {
-    // const chainInfo: any | unknown = getChain(5);
-    const strategyAddress = await allo.getStrategy(81);
+    // const chainInfo: any | unknown = getChain(421614);
+    const strategyAddress = await allo.getStrategy(1);
     console.log("strategyAddress", strategyAddress);
 
     strategy.setContract(strategyAddress as `0x${string}`);
     const txData: TransactionData = strategy.getBatchSetAllocatorData(data);
+
+    console.log("txData", txData);
 
     try {
       const tx = await sendTransaction({
@@ -227,7 +229,7 @@ export const createApplication = async (
   chain: number,
   poolId: number
 ): Promise<string> => {
-  if (chain !== 5) return "0x";
+  if (chain !== 421614) return "0x";
 
   // Set some allocators for demo
   const allocatorData: SetAllocatorData[] = [
@@ -237,7 +239,7 @@ export const createApplication = async (
     },
   ];
 
-  // await batchSetAllocator(allocatorData);
+  await batchSetAllocator(allocatorData);
 
   console.log("Allocators set");
 
@@ -275,9 +277,14 @@ export const createApplication = async (
 
   // 3. Register application to pool
   let recipientId;
-  const strategy = new MicroGrantsStrategy({ chain, poolId });
+  const strategy = new MicroGrantsStrategy({
+    chain,
+    rpc: "https://arb-sepolia.g.alchemy.com/v2/SLqkAkF6od4OWU62e-XWbuzmKvwjehYp",
+    poolId,
+  });
   let anchorAddress: string = ZERO_ADDRESS;
 
+  // Get the anchor address for the profileId
   if (ethereumHashRegExp.test(profileId || "")) {
     anchorAddress = (
       await getProfileById({
@@ -364,7 +371,7 @@ export const createApplication = async (
 
 export const allocate = async (data: Allocation) => {
   if (strategy) {
-    // const chainInfo: any | unknown = getChain(5);
+    // const chainInfo: any | unknown = getChain(421614);
 
     strategy.setPoolId(81);
     const txData: TransactionData = strategy.getAllocationData(

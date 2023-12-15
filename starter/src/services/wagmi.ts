@@ -4,24 +4,23 @@ import { getDefaultWallets } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig } from "wagmi";
 import {
   arbitrum,
+  arbitrumSepolia,
   base,
   celo,
-  goerli,
   mainnet,
   optimism,
-  polygon
+  polygon,
 } from "wagmi/chains";
-import { publicProvider } from "wagmi/providers/public";
-
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { infuraProvider } from "wagmi/providers/infura";
+import { publicProvider } from "wagmi/providers/public";
 
 import dotenv from "dotenv";
 dotenv.config();
 
 const stagingChains = [
   // celoAlfajores,
-  goerli,
+  arbitrumSepolia,
   // sepolia,
   // polygonMumbai,
   // arbitrumGoerli,
@@ -39,12 +38,13 @@ const { chains, publicClient } = configureChains(
   [
     alchemyProvider({
       apiKey:
-        (process.env.ALCHEMY_ID as string) ||
+        (process.env.NEXT_PUBLIC_ALCHEMY_ID as string) ||
         "ajWJk5YwtfTZ5vCAhMg8I8L61XFhyJpa",
     }),
     infuraProvider({
       apiKey:
-        (process.env.INFURA_ID as string) || "ae484befdd004b64bfe2059d3526a138",
+        (process.env.NEXT_PUBLIC_INFURA_ID as string) ||
+        "ae484befdd004b64bfe2059d3526a138",
     }),
     publicProvider(),
   ]
@@ -52,7 +52,9 @@ const { chains, publicClient } = configureChains(
 
 const { connectors } = getDefaultWallets({
   appName: "Allo Starter Kit",
-  projectId: (process.env.PROJECT_ID as string) || "YOUR_PROJECT_ID",
+  projectId:
+    (process.env.NEXT_PUBLIC_PROJECT_ID as string) ||
+    "31b0b6255ee5cc68ae76cab5fa96a9a0",
   chains,
 });
 

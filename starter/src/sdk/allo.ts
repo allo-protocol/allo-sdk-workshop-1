@@ -3,12 +3,15 @@ import { Allo } from "@allo-team/allo-v2-sdk";
 import { deployMicrograntsStrategy } from "./microgrants";
 // import { createProfile } from "./registry";
 
-export const allo = new Allo({ chain: 5 });
+export const allo = new Allo({
+  chain: 421614,
+  rpc: "https://arb-sepolia.g.alchemy.com/v2/SLqkAkF6od4OWU62e-XWbuzmKvwjehYp",
+});
 
 export const createPool = async () => {
   // Create a profile to use as the pool owner/creator
   const profileId =
-    "0xf06fc96ede7e7e7f43af740ecafbdd898c36d44e5b834ad163db6a94da441f5e";
+    "0x5bb31a85ac43cf25d573d7b77c119ba0d1036efa3746c324041f72c595ba6d89";
   // const profileId = await createProfile();
 
   // Save metadata to IPFS
