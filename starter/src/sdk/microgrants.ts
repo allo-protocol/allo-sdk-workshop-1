@@ -12,6 +12,7 @@ import {
 } from "@/utils/common";
 import { checkIfRecipientIsIndexedQuery } from "@/utils/query";
 import { getProfileById } from "@/utils/request";
+import { CreatePoolArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
 // import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
 import {
   TransactionData,
@@ -80,11 +81,10 @@ export const deployMicrograntsStrategy = async (
   // get the init data
   // todo: snippet => getInitializeData
 
-  const poolCreationData = {
-    profileId: profileId,
-    strategy: strategyAddress,
-    initStrategyData: initStrategyData,
-    // this is the test Allo token address
+  const poolCreationData: CreatePoolArgs = {
+    profileId: profileId, // sender must be a profile member
+    strategy: strategyAddress, // approved strategy contract
+    initStrategyData: initStrategyData, // unique to the strategy
     token: NATIVE, // you need to change this to your token address
     amount: BigInt(1e14),
     metadata: {

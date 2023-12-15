@@ -139,22 +139,20 @@ import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 // Prepare the transaction arguments
 const createProfileArgs: CreateProfileArgs = {
-  nonce: Math.floor(Math.random() * 1000000),
+  nonce: Math.floor(Math.random() * 10000),
   name: "Allo Workshop",
   metadata: {
     protocol: BigInt(1),
     pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
   },
   members: [
-    "0x5cdb35fADB8262A3f88863254c870c2e6A848CcA",
-    "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
-    "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    "0x add your wallet address here along with any other managers you want to add",
   ],
-  owner: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+  owner: "0x add your wallet address here",
 };
 
 // Create the transaction with the arguments
-const txData: TransactionData = registry.createProfile(createProfileArgs);
+const txData: TransactionData = await registry.createProfile(createProfileArgs);
 
 // Client could be from ethers, viem, etc..
 const hash = await client.sendTransaction({
@@ -220,18 +218,21 @@ In `microgrants.ts` create a new pool:
 import { CreatePoolArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
 import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
-const createPoolArgs: CreatePoolArgs = {
-  profileId: "your_profileId_here", // sender must be a profile member
-  strategy: "approved_strategy_contract", // approved strategy contract
+const poolCreationData: CreatePoolArgs = {
+  profileId: profileId, // sender must be a profile member
+  strategy: strategyAddress, // approved strategy contract
   initStrategyData: initStrategyData, // unique to the strategy
-  token: "token_address_here",
-  amount: "pool_amount_here",
+  token: NATIVE, // you need to change this to your token address
+  amount: BigInt(1e14),
   metadata: {
     protocol: BigInt(1),
-    pointer: "your_ipfs_hash",
+    pointer: pointer.IpfsHash,
   },
-  managers: ["pool_manager_address"],
+  managers: [
+    "add your wallet address here along with any other managers you want to add",
+  ],
 };
+
 
 const txData: TransactionData = allo.createPool(createPoolArgs);
 
