@@ -14,6 +14,7 @@ export const registry = new Registry({ chain: 5 });
 export const createProfile = async () => {
   // prepare the arguments
   const createProfileArgs: CreateProfileArgs = {
+    // random number to prevent nonce reuse, this is required.
     nonce: Math.floor(Math.random() * 10000),
     name: "Allo Workshop",
     metadata: {
