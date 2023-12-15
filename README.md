@@ -252,7 +252,7 @@ console.log(`Transaction hash: ${hash}`);
 ```javascript
 const registerRecipientData = strategy.getRegisterRecipientData({
   registryAnchor: anchorAddress as `0x${string}`,
-  recipientAddress: data.recipientAddress as `0x${string}`,
+  recipientAddress: "enter your wallet address here",
   requestedAmount: data.requestedAmount,
   metadata: {
     protocol: BigInt(1),

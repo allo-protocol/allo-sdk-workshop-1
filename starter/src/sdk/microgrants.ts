@@ -92,9 +92,7 @@ export const deployMicrograntsStrategy = async (
       pointer: pointer.IpfsHash,
     },
     managers: [
-      "0x5cdb35fADB8262A3f88863254c870c2e6A848CcA",
-      "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
-      "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+      "add your wallet address here along with any other managers you want to add",
     ],
   };
 
@@ -128,7 +126,6 @@ export const deployMicrograntsStrategy = async (
     //   pollingData,
     //   "microGrant"
     // );
-
     // NOTE: Index Metadata Example
     // const pollingMetadataResult = await pollUntilMetadataIsAvailable(
     //   pointer.IpfsHash
@@ -210,7 +207,7 @@ export const createApplication = async (
   // NOTE: Import type from SDK - SetAllocatorData[]
   const allocatorData: SetAllocatorData[] = [
     {
-      allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+      allocatorAddress: "0x enter your wallet address here",
       flag: true,
     },
   ];
@@ -259,6 +256,7 @@ export const createApplication = async (
 
   let anchorAddress: string = ZERO_ADDRESS;
 
+  // get the anchor address from the profile
   if (ethereumHashRegExp.test(profileId || "")) {
     anchorAddress = (
       await getProfileById({
@@ -271,15 +269,6 @@ export const createApplication = async (
   console.log("anchorAddress", anchorAddress);
 
   // todo: snippet => getRegisterRecipientData
-  const registerRecipientData = strategy.getRegisterRecipientData({
-    registryAnchor: "0xcff0fdff14df9d00822279270e7ec87984151a84", // anchorAddress as `0x${string}`,
-    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42", // data.recipientAddress as `0x${string}`,
-    requestedAmount: BigInt(1e13), // data.requestedAmount,
-    metadata: {
-      protocol: BigInt(1),
-      pointer: pointer.IpfsHash,
-    },
-  });
 
   console.log("registerRecipientData", registerRecipientData);
 
