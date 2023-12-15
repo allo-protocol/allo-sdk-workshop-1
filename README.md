@@ -62,8 +62,8 @@ By the end of this, developers should be able to:
   # Checkout the start branch
   git checkout start
 
-  cd project
-  # You should now be in the /projec directory
+  cd starter
+  # You should now be in the /starter directory
 ```
 
 - [3 mins] Install dependencies with bun/yarn install.

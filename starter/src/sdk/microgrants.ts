@@ -12,6 +12,7 @@ import {
 } from "@/utils/common";
 import { checkIfRecipientIsIndexedQuery } from "@/utils/query";
 import { getProfileById } from "@/utils/request";
+import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
 import { CreatePoolArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
 // import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
 import {
@@ -28,10 +29,13 @@ import {
   waitForTransaction,
 } from "@wagmi/core";
 import { decodeEventLog } from "viem";
-// import { allo } from "./allo";
+import { allo } from "./allo";
 
 // create a strategy instance
 // todo: snippet => createStrategyInstance
+export const strategy = new MicroGrantsStrategy({
+  chain: 5,
+});
 
 // NOTE: This is the deploy params for the MicroGrantsv1 contract
 // 🚨 Please make sure your strategy type is correct or Spec will not index it.
@@ -39,6 +43,7 @@ import { decodeEventLog } from "viem";
 // Hats: "MicroGrantsHatsv1"
 // Gov: "MicroGrantsGovv1"
 // todo: snippet => deployParams
+export const deployParams = strategy.getDeployParams("MicroGrantsv1");
 
 // This is called from `allo.ts` and is used to deploy the strategy contract and create a pool.
 // It is recommended you split this out into two functions, one to deploy the strategy and one to create the pool
@@ -80,6 +85,7 @@ export const deployMicrograntsStrategy = async (
 
   // get the init data
   // todo: snippet => getInitializeData
+  const initStrategyData = await strategy.getInitializeData(initParams);
 
   const poolCreationData: CreatePoolArgs = {
     profileId: profileId, // sender must be a profile member
@@ -98,6 +104,9 @@ export const deployMicrograntsStrategy = async (
 
   // Prepare the transaction data
   // todo: snippet => createPoolWithCustomStrategy
+  const createPoolData = await allo.createPoolWithCustomStrategy(
+    poolCreationData
+  );
 
   try {
     const tx = await sendTransaction({

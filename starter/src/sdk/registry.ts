@@ -1,12 +1,14 @@
 import { RegistryABI } from "@/abi/Registry";
 import { wagmiConfigData } from "@/services/wagmi";
 import { getEventValues } from "@/utils/common";
+import { Registry } from "@allo-team/allo-v2-sdk";
 import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 import { sendTransaction } from "@wagmi/core";
 
 // create a registry instance
 // todo: snippet => createRegistryInstance
+export const registry = new Registry({ chain: 5 });
 
 // NOTE: Update this function to use your own data.
 export const createProfile = async () => {
@@ -19,9 +21,9 @@ export const createProfile = async () => {
       pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
     },
     members: [
-      "0x add your wallet address here along with any other managers you want to add",
+      "0xE849b2a694184B8739a04C915518330757cDB18B",
     ],
-    owner: "0x add your wallet address here",
+    owner: "0xE849b2a694184B8739a04C915518330757cDB18B",
   };
 
   console.log("Creating profile with args: ", createProfileArgs);

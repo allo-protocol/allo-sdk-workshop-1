@@ -9,7 +9,7 @@ import {
   goerli,
   mainnet,
   optimism,
-  polygon
+  polygon,
 } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 
@@ -38,13 +38,10 @@ const { chains, publicClient } = configureChains(
   [...stagingChains],
   [
     alchemyProvider({
-      apiKey:
-        (process.env.ALCHEMY_ID as string) ||
-        "ajWJk5YwtfTZ5vCAhMg8I8L61XFhyJpa",
+      apiKey: "ajWJk5YwtfTZ5vCAhMg8I8L61XFhyJpa",
     }),
     infuraProvider({
-      apiKey:
-        (process.env.INFURA_ID as string) || "ae484befdd004b64bfe2059d3526a138",
+      apiKey: "ae484befdd004b64bfe2059d3526a138",
     }),
     publicProvider(),
   ]
@@ -52,7 +49,7 @@ const { chains, publicClient } = configureChains(
 
 const { connectors } = getDefaultWallets({
   appName: "Allo Starter Kit",
-  projectId: (process.env.PROJECT_ID as string) || "YOUR_PROJECT_ID",
+  projectId: "31b0b6255ee5cc68ae76cab5fa96a9a0",
   chains,
 });
 

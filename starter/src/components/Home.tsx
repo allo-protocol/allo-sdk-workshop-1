@@ -26,14 +26,14 @@ const Home = () => {
     description: "Test Application Description",
     email: "test@gitcoin.co",
     requestedAmount: parseUnits("0.1", 18),
-    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    recipientAddress: "0xE849b2a694184B8739a04C915518330757cDB18B",
     base64Image: "",
     profileName: "",
     profileId: profileId,
   };
 
   const _allocationData: Allocation = {
-    recipientId: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    recipientId: "0xE849b2a694184B8739a04C915518330757cDB18B",
     status: Status.Accepted,
   };
 
