@@ -19,7 +19,7 @@ import { WagmiConfig } from "wagmi";
 
 const Home = () => {
   const profileId =
-    "0x5bb31a85ac43cf25d573d7b77c119ba0d1036efa3746c324041f72c595ba6d89";
+    "0x93457ead47c0699099938b14a01a9de0d80f3b49bcee1806898abdf74d4a6cc6";
   const _newApplicationData: TNewApplication = {
     name: "Test Application",
     website: "https://docs.allo.gitcoin.co",
@@ -88,7 +88,7 @@ const Home = () => {
               </button>
               <button
                 onClick={() => {
-                  createApplication(_newApplicationData, 421614, 1).then(
+                  createApplication(_newApplicationData, 421614, 2).then(
                     (res: any) => {
                       console.log("Recipient ID: ", res.recipientId);
                       alert("Applied with ID: " + res.recipientId);

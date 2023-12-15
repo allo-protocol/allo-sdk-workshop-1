@@ -239,7 +239,7 @@ export const createApplication = async (
     },
   ];
 
-  await batchSetAllocator(allocatorData);
+  // await batchSetAllocator(allocatorData);
 
   console.log("Allocators set");
 
@@ -297,7 +297,7 @@ export const createApplication = async (
   console.log("anchorAddress", anchorAddress);
 
   const registerRecipientData = strategy.getRegisterRecipientData({
-    registryAnchor: "0xcff0fdff14df9d00822279270e7ec87984151a84", // anchorAddress as `0x${string}`,
+    registryAnchor: anchorAddress as `0x${string}`,
     recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42", // data.recipientAddress as `0x${string}`,
     requestedAmount: BigInt(1e13), // data.requestedAmount,
     metadata: {
