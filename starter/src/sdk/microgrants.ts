@@ -22,6 +22,7 @@ import {
 import {
   Allocation,
   SetAllocatorData,
+  StrategyType,
 } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
 import {
   getWalletClient,
@@ -39,11 +40,11 @@ export const strategy = new MicroGrantsStrategy({
 
 // NOTE: This is the deploy params for the MicroGrantsv1 contract
 // 🚨 Please make sure your strategy type is correct or Spec will not index it.
-// MicroGrants: "MicroGrantsv1"
-// Hats: "MicroGrantsHatsv1"
-// Gov: "MicroGrantsGovv1"
+// MicroGrants: StrategyType.MicroGrants
+// Hats: StrategyType.Hats
+// Gov: StrategyType.Gov
 // todo: snippet => deployParams
-export const deployParams = strategy.getDeployParams("MicroGrantsv1");
+export const deployParams = strategy.getDeployParams(StrategyType.MicroGrants);
 
 // This is called from `allo.ts` and is used to deploy the strategy contract and create a pool.
 // It is recommended you split this out into two functions, one to deploy the strategy and one to create the pool

@@ -32,6 +32,25 @@ By the end of this, developers should be able to:
 
 ## Prerequisites
 
+General knowlege of NEXT.js, React, and TypeScript is required. We use NEXT.js v14.0.1, React v18 and TypeScript v5.
+
+Outline of project:
+
+```
+- /allo-sdk-workshop-1
+  - /src
+    - /abi
+    - /app
+    - /components
+      - /Home.tsx
+    - /sdk
+      - allo.ts
+      - microgrants.ts
+      - registry.ts
+    - /services
+    - /utils
+```
+
 - [ ] [Node.js](https://nodejs.org/en/download/)
 - [ ] [Git](https://git-scm.com/downloads)
 - [ ] [Yarn](https://yarnpkg.com/en/docs/install),
@@ -40,10 +59,15 @@ By the end of this, developers should be able to:
       [Bun](https://bun.sh/docs/installation)
 - [ ] [Pináta](https://pinata.cloud) - create a free Pináta account
 
+> We use pináta to pin our metadata to IPFS. You can use any IPFS pinning service you like.
+
 ## Demo [7 mins]
 
 - Demo SeaGrants to show how we set up a grant strategy and application using
   the Allo SDK
+
+## What we'll build
+<img width="1029" alt="Screenshot 2023-12-16 at 11 44 06 AM" src="https://github.com/allo-protocol/allo-sdk-workshop-1/assets/9419140/36a1d7d5-95fa-44b6-9099-5073d78c77b9">
 
 ## Preparation [10 mins]
 
@@ -139,6 +163,8 @@ import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 // Prepare the transaction arguments
 const createProfileArgs: CreateProfileArgs = {
+  // random number to prevent nonce reuse, this is required.
+  // NOTE: The profile ID id based on the provided nonce and the caller's address.
   nonce: Math.floor(Math.random() * 10000),
   name: "Allo Workshop",
   metadata: {
@@ -163,6 +189,9 @@ const hash = await client.sendTransaction({
 
 console.log(`Transaction hash: ${hash}`);
 ```
+
+Let's run the app here and create a new profile. You can see the transaction result in the console and alert.
+<img width="1159" alt="Screenshot 2023-12-16 at 11 52 34 AM" src="https://github.com/allo-protocol/allo-sdk-workshop-1/assets/9419140/44fc7f3e-d1ee-4d0e-bbb0-49d6a1388de4">
 
 To start interacting with the MicroGrants contract, create a new instance of
 MicroGrantsStrategy in `microgrants.ts`:

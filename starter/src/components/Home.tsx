@@ -18,6 +18,8 @@ import { parseUnits } from "viem";
 import { WagmiConfig } from "wagmi";
 
 const Home = () => {
+  // Set this here so we dont have to create a new profile every time and we are not managing state in this demo.
+  // We use the profileId to create a new application in `_newApplicationData`.
   const profileId =
     "0xecc844434d1227f7593db591cfd56b1391a17d1dd31b464ccafd1bd8fe43ff55";
   const _newApplicationData: TNewApplication = {

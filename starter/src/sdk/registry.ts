@@ -15,6 +15,7 @@ export const createProfile = async () => {
   // prepare the arguments
   const createProfileArgs: CreateProfileArgs = {
     // random number to prevent nonce reuse, this is required.
+    // NOTE: The profile ID id based on the provided nonce and the caller's address.
     nonce: Math.floor(Math.random() * 10000),
     name: "Allo Workshop",
     metadata: {

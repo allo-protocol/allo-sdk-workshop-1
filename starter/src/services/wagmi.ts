@@ -11,10 +11,8 @@ import {
   optimism,
   polygon,
 } from "wagmi/chains";
-import { publicProvider } from "wagmi/providers/public";
-
 import { alchemyProvider } from "wagmi/providers/alchemy";
-import { infuraProvider } from "wagmi/providers/infura";
+import { publicProvider } from "wagmi/providers/public";
 
 import dotenv from "dotenv";
 dotenv.config();
@@ -40,9 +38,11 @@ const { chains, publicClient } = configureChains(
     alchemyProvider({
       apiKey: "ajWJk5YwtfTZ5vCAhMg8I8L61XFhyJpa",
     }),
-    infuraProvider({
-      apiKey: "ae484befdd004b64bfe2059d3526a138",
-    }),
+    // Infura key here if you want to use it
+    // infuraProvider({
+    //   apiKey: "ae484befdd004b64bfe2059d3526a138",
+    // }),
+    // public provider for fallback
     publicProvider(),
   ]
 );
