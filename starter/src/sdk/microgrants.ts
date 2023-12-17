@@ -99,7 +99,7 @@ export const deployMicrograntsStrategy = async (
       pointer: pointer.IpfsHash,
     },
     managers: [
-      "add your wallet address here along with any other managers you want to add",
+      "0xE849b2a694184B8739a04C915518330757cDB18B",
     ],
   };
 
@@ -217,7 +217,7 @@ export const createApplication = async (
   // NOTE: Import type from SDK - SetAllocatorData[]
   const allocatorData: SetAllocatorData[] = [
     {
-      allocatorAddress: "0x enter your wallet address here",
+      allocatorAddress: "0xE849b2a694184B8739a04C915518330757cDB18B",
       flag: true,
     },
   ];
@@ -263,6 +263,7 @@ export const createApplication = async (
   let recipientId;
 
   // todo: snippet => createStrategyInstanceWithPoolId
+  const strategy = new MicroGrantsStrategy({ chain, poolId });
 
   let anchorAddress: string = ZERO_ADDRESS;
 
@@ -279,6 +280,15 @@ export const createApplication = async (
   console.log("anchorAddress", anchorAddress);
 
   // todo: snippet => getRegisterRecipientData
+  const registerRecipientData = strategy.getRegisterRecipientData({
+  registryAnchor: anchorAddress as `0x${string}`,
+  recipientAddress: "0xE849b2a694184B8739a04C915518330757cDB18B",
+  requestedAmount: data.requestedAmount,
+  metadata: {
+    protocol: BigInt(1),
+    pointer: pointer.IpfsHash,
+  },
+});
 
   console.log("registerRecipientData", registerRecipientData);
 
