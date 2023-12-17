@@ -1,18 +1,16 @@
 import { RegistryABI } from "@/abi/Registry";
 import { wagmiConfigData } from "@/services/wagmi";
 import { getEventValues } from "@/utils/common";
-import { Registry } from "@allo-team/allo-v2-sdk";
 import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 import { sendTransaction } from "@wagmi/core";
 
 // create a registry instance
 // todo: snippet => createRegistryInstance
-export const registry = new Registry({ chain: 5 });
 
 // NOTE: Update this function to use your own data.
 export const createProfile = async () => {
-  // prepare the arguments
+  // prepare the arguments -> type comes from the SDK
   const createProfileArgs: CreateProfileArgs = {
     // random number to prevent nonce reuse, this is required.
     // NOTE: The profile ID id based on the provided nonce and the caller's address.
@@ -30,7 +28,7 @@ export const createProfile = async () => {
 
   console.log("Creating profile with args: ", createProfileArgs);
 
-  // create the transaction with the arguments
+  // create the transaction with the arguments -> type comes from SDK
   const txData: TransactionData = await registry.createProfile(
     createProfileArgs
   );
