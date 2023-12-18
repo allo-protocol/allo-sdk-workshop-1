@@ -8,7 +8,7 @@ import { sendTransaction } from "@wagmi/core";
 
 export const registry = new Registry({
   chain: 421614,
-  rpc: "https://sepolia-rollup.arbitrum.io/rpc",
+  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
 });
 
 // NOTE: Update this function to use your own data.
