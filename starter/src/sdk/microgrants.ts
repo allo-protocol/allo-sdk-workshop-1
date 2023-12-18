@@ -12,7 +12,8 @@ import {
 } from "@/utils/common";
 import { checkIfRecipientIsIndexedQuery } from "@/utils/query";
 import { getProfileById } from "@/utils/request";
-import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
+import { CreatePoolArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
+// import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
 import {
   TransactionData,
   ZERO_ADDRESS,
@@ -27,11 +28,9 @@ import {
   waitForTransaction,
 } from "@wagmi/core";
 import { decodeEventLog } from "viem";
-import { allo } from "./allo";
-// import { StrategyType } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
 
-// "0xb79772d36362c27a56e9f0d914af6dbb0e5a9a07" pool 81
-
+// create a strategy instance
+// todo: snippet => createStrategyInstance
 export const strategy = new MicroGrantsStrategy({
   chain: 421614,
   rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
@@ -41,6 +40,16 @@ export const deployParams = strategy.getDeployParams("MicroGrantsv1");
 
 // console.log("deployParams", deployParams);
 
+// NOTE: This is the deploy params for the MicroGrantsv1 contract
+// 🚨 Please make sure your strategy type is correct or Spec will not index it.
+// MicroGrants: StrategyType.MicroGrants
+// Hats: StrategyType.Hats
+// Gov: StrategyType.Gov
+// todo: snippet => deployParams
+
+// This is called from `allo.ts` and is used to deploy the strategy contract and create a pool.
+// It is recommended you split this out into two functions, one to deploy the strategy and one to create the pool
+// for a more usable application.
 export const deployMicrograntsStrategy = async (
   pointer: any,
   profileId: string
@@ -64,57 +73,7 @@ export const deployMicrograntsStrategy = async (
     console.error("Deploying Strategy", e);
   }
 
-  // NOTE: Set this up for token allowances when not the native token
-  // if (data.tokenAddress !== NATIVE) {
-  //   const allowance = await wagmiConfigData.publicClient.readContract({
-  //     address: data.tokenAddress,
-  //     abi: abi,
-  //     functionName: "allowance",
-  //     args: [address, allo.address()],
-  //   });
-
-  //   if ((allowance as bigint) <= BigInt(data.fundPoolAmount)) {
-  //     const approvalAmount =
-  //       BigInt(data.fundPoolAmount) - (allowance as bigint);
-
-  //     const approveData = encodeFunctionData({
-  //       abi: abi,
-  //       functionName: "approve",
-  //       args: [allo.address(), approvalAmount],
-  //     });
-
-  //     try {
-  //       const tx = await sendTransaction({
-  //         to: data.tokenAddress,
-  //         data: approveData,
-  //         value: BigInt(0),
-  //       });
-
-  //       await wagmiConfigData.publicClient.waitForTransactionReceipt({
-  //         hash: tx.hash,
-  //         confirmations: 2,
-  //       });
-
-  //       updateStepHref(
-  //         stepIndex,
-  //         `${chainInfo.blockExplorers.default.url}/tx/` + tx.hash
-  //       );
-  //       updateStepStatus(stepIndex, true);
-  //     } catch (e) {
-  //       updateStepStatus(stepIndex, false);
-  //       console.log("Approving Token", e);
-  //     }
-  //   } else {
-  //     updateStepContent(stepIndex, "Token already approved on ");
-  //     updateStepStatus(stepIndex, true);
-  //   }
-  // } else {
-  //   updateStepContent(stepIndex, "Approval not needed on ");
-  //   updateStepStatus(stepIndex, true);
-  // }
-
-  console.log("date", new Date());
-
+  // NOTE: Timestamps should be in seconds and start should be a few minutes in the future to account for transaction times.7
   const startDateInSeconds = Math.floor(new Date().getTime() / 1000) + 300;
   const endDateInSeconds = Math.floor(new Date().getTime() / 1000) + 10000;
 
@@ -126,26 +85,26 @@ export const deployMicrograntsStrategy = async (
     maxRequestedAmount: BigInt(1e13),
   };
 
-  console.log("initParams", initParams);
+  // get the init data
+  // todo: snippet => getInitializeData
 
-  const initStrategyData = await strategy.getInitializeData(initParams);
-  const poolCreationData = {
-    profileId: profileId,
-    strategy: strategyAddress,
-    initStrategyData: initStrategyData,
-    // this is the test Allo token address
+  const poolCreationData: CreatePoolArgs = {
+    profileId: profileId, // sender must be a profile member
+    strategy: strategyAddress, // approved strategy contract
+    initStrategyData: initStrategyData, // unique to the strategy
     token: NATIVE, // you need to change this to your token address
     amount: BigInt(1e14),
     metadata: {
       protocol: BigInt(1),
       pointer: pointer.IpfsHash,
     },
-    managers: ["0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42"],
+    managers: [
+      "0x add your wallet address here along with any other managers you want to add",
+    ],
   };
 
-  const createPoolData = await allo.createPoolWithCustomStrategy(
-    poolCreationData
-  );
+  // Prepare the transaction data
+  // todo: snippet => createPoolWithCustomStrategy
 
   try {
     const tx = await sendTransaction({
@@ -174,7 +133,6 @@ export const deployMicrograntsStrategy = async (
     //   pollingData,
     //   "microGrant"
     // );
-
     // NOTE: Index Metadata Example
     // const pollingMetadataResult = await pollUntilMetadataIsAvailable(
     //   pointer.IpfsHash
@@ -193,8 +151,7 @@ export const deployMicrograntsStrategy = async (
 
 export const batchSetAllocator = async (data: SetAllocatorData[]) => {
   if (strategy) {
-    // const chainInfo: any | unknown = getChain(421614);
-    const strategyAddress = await allo.getStrategy(1);
+    const strategyAddress = await allo.getStrategy(3);
     console.log("strategyAddress", strategyAddress);
 
     strategy.setContract(strategyAddress as `0x${string}`);
@@ -228,12 +185,15 @@ export const createApplication = async (
   if (chain !== 421614) return "0x";
 
   // Set some allocators for demo
+  // NOTE: Import type from SDK - SetAllocatorData[]
   const allocatorData: SetAllocatorData[] = [
     {
-      allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+      allocatorAddress: "0x enter your wallet address here",
       flag: true,
     },
   ];
+
+  // todo: set the allocators defined above
   await batchSetAllocator(allocatorData);
 
   console.log("Allocators set");
@@ -291,6 +251,7 @@ export const createApplication = async (
 
   console.log("anchorAddress", anchorAddress);
 
+  // todo: snippet => getRegisterRecipientData
   const registerRecipientData = strategy.getRegisterRecipientData({
     registryAnchor: anchorAddress as `0x${string}`,
     recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42", // data.recipientAddress as `0x${string}`,

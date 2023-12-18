@@ -9,9 +9,8 @@ import {
   celo,
   mainnet,
   optimism,
-  polygon
+  polygon,
 } from "wagmi/chains";
-
 import dotenv from "dotenv";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 dotenv.config();

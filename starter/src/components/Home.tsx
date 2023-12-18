@@ -18,6 +18,8 @@ import { parseUnits } from "viem";
 import { WagmiConfig } from "wagmi";
 
 const Home = () => {
+  // Set this here so we dont have to create a new profile every time and we are not managing state in this demo.
+  // We use the profileId to create a new application in `_newApplicationData`.
   const profileId =
     "0x1f40aa439b92e4c9b1ece733467bbffc8ffcdecd20c26624af0406b4019c305f";
   const _newApplicationData: TNewApplication = {
@@ -26,14 +28,14 @@ const Home = () => {
     description: "Test Application Description",
     email: "test@gitcoin.co",
     requestedAmount: parseUnits("0.1", 18),
-    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    recipientAddress: "0xE849b2a694184B8739a04C915518330757cDB18B",
     base64Image: "",
     profileName: "",
     profileId: profileId,
   };
 
   const _allocationData: Allocation = {
-    recipientId: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    recipientId: "0xE849b2a694184B8739a04C915518330757cDB18B",
     status: Status.Accepted,
   };
 
@@ -88,7 +90,7 @@ const Home = () => {
               </button>
               <button
                 onClick={() => {
-                  createApplication(_newApplicationData, 421614, 2).then(
+                  createApplication(_newApplicationData, 421614, 3).then(
                     (res: any) => {
                       console.log("Recipient ID: ", res.recipientId);
                       alert("Applied with ID: " + res.recipientId);

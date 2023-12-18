@@ -32,6 +32,25 @@ By the end of this, developers should be able to:
 
 ## Prerequisites
 
+General knowlege of NEXT.js, React, and TypeScript is required. We use NEXT.js v14.0.1, React v18 and TypeScript v5.
+
+Outline of project:
+
+```
+- /allo-sdk-workshop-1
+  - /src
+    - /abi
+    - /app
+    - /components
+      - /Home.tsx
+    - /sdk
+      - allo.ts
+      - microgrants.ts
+      - registry.ts
+    - /services
+    - /utils
+```
+
 - [ ] [Node.js](https://nodejs.org/en/download/)
 - [ ] [Git](https://git-scm.com/downloads)
 - [ ] [Yarn](https://yarnpkg.com/en/docs/install),
@@ -40,10 +59,15 @@ By the end of this, developers should be able to:
       [Bun](https://bun.sh/docs/installation)
 - [ ] [Pináta](https://pinata.cloud) - create a free Pináta account
 
+> We use pináta to pin our metadata to IPFS. You can use any IPFS pinning service you like.
+
 ## Demo [7 mins]
 
 - Demo SeaGrants to show how we set up a grant strategy and application using
   the Allo SDK
+
+## What we'll build
+<img width="1029" alt="Screenshot 2023-12-16 at 11 44 06 AM" src="https://github.com/allo-protocol/allo-sdk-workshop-1/assets/9419140/36a1d7d5-95fa-44b6-9099-5073d78c77b9">
 
 ## Preparation [10 mins]
 
@@ -62,8 +86,8 @@ By the end of this, developers should be able to:
   # Checkout the start branch
   git checkout start
 
-  cd project
-  # You should now be in the /projec directory
+  cd starter
+  # You should now be in the /starter directory
 ```
 
 - [3 mins] Install dependencies with bun/yarn install.
@@ -85,7 +109,7 @@ By the end of this, developers should be able to:
 And to add the Allo SDK we run:
 
 ```bash
-bun install @allo-team/allo-v2-sdk
+  bun install @allo-team/allo-v2-sdk
 
   # or
   yarn install @allo-team/allo-v2-sdk
@@ -104,12 +128,13 @@ bun install @allo-team/allo-v2-sdk
 1. [15-20 mins] Create a new Strategy(Pool), Create a new Pool & Profile (A
    profile is required to create a pool on Allo)
 
-- Code-along: `NewPoolContext.tsx`
+- Code-along: `allo.ts`, `registry.ts` & `microgrants.ts`
 
 To create a new Allo instance, you need to provide the chain information. In
 this example, we're using the 5 (Goerli) chain information (see supported chains
 [here](https://github.com/allo-protocol/allo-v2/blob/main/contracts/README.md)).
 
+In `allo.ts`:
 ```javascript
 // Importy Allo from SDK
 import { Allo } from "@allo-team/allo-v2-sdk/";
@@ -122,6 +147,7 @@ To create a new Registry instance, you need to provide the chain information. In
 this example, we're using the 5 (Goerli) chain information (see supported chains
 [here](https://github.com/allo-protocol/allo-v2/blob/main/contracts/README.md)).
 
+In `registry.ts`:
 ```javascript
 // Importy Registry from SDK
 import { Registry } from "@allo-team/allo-v2-sdk/";
@@ -131,28 +157,28 @@ const registry = new Registry({ chain: 5 });
 ```
 
 To create a new profile using the `createProfile` function:
-
 ```javascript
 import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
 // Prepare the transaction arguments
 const createProfileArgs: CreateProfileArgs = {
-  nonce: 3,
-  name: "Developer",
+  // random number to prevent nonce reuse, this is required.
+  // NOTE: The profile ID id based on the provided nonce and the caller's address.
+  nonce: Math.floor(Math.random() * 10000),
+  name: "Allo Workshop",
   metadata: {
     protocol: BigInt(1),
     pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
   },
-  owner: "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
   members: [
-    "0x5cdb35fADB8262A3f88863254c870c2e6A848CcA",
-    "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
+    "0x add your wallet address here along with any other managers you want to add",
   ],
+  owner: "0x add your wallet address here",
 };
 
 // Create the transaction with the arguments
-const txData: TransactionData = registry.createProfile(createProfileArgs);
+const txData: TransactionData = await registry.createProfile(createProfileArgs);
 
 // Client could be from ethers, viem, etc..
 const hash = await client.sendTransaction({
@@ -164,8 +190,11 @@ const hash = await client.sendTransaction({
 console.log(`Transaction hash: ${hash}`);
 ```
 
+Let's run the app here and create a new profile. You can see the transaction result in the console and alert.
+<img width="1159" alt="Screenshot 2023-12-16 at 11 52 34 AM" src="https://github.com/allo-protocol/allo-sdk-workshop-1/assets/9419140/44fc7f3e-d1ee-4d0e-bbb0-49d6a1388de4">
+
 To start interacting with the MicroGrants contract, create a new instance of
-`MicroGrantsStrategy`:
+MicroGrantsStrategy in `microgrants.ts`:
 
 ```javascript
 import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
@@ -175,7 +204,7 @@ const strategy = new MicroGrantsStrategy({
 });
 ```
 
-If you are aware of the poolId, you can load that while creating the instance
+📝 If you are aware of the poolId, you can load that while creating the instance
 
 ```javascript
 import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
@@ -188,10 +217,12 @@ const strategy = new MicroGrantsStrategy({
 
 ### Get the strategy deploy parameters
 
+In `microgrants.ts`:
 ```javascript
 import { StrategyType } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
 
-const strategyType = StrategyType.Gov; // Specify the strategy type
+// Specify the strategy type - MicroGrants for default/demo purposes
+const strategyType = StrategyType.MicroGrants; 
 const deployParams = strategy.getDeployParams(strategyType);
 
 // Client could be from ethers, viem, etc.
@@ -205,37 +236,32 @@ const hash = await walletClient!.deployContract({
 ### Get the initialize data
 
 ```javascript
-if (data.strategyType === StrategyType.MicroGrants) {
-  initStrategyData = await strategy.getInitializeData(initParams);
-} else if (data.strategyType === StrategyType.Hats) {
-  initStrategyData = await strategy.getInitializeDataHats(initParams);
-} else if (data.strategyType === StrategyType.Gov) {
-  initStrategyData = await strategy.getInitializeDataGov(initParams);
-} else {
-  throw new Error("Invalid strategy type");
-}
+initStrategyData = await strategy.getInitializeData(initParams);
 ```
 
 ### Create the pool transaction
 
-To create a new pool:
+In `microgrants.ts` create a new pool:
 
 ```typescript
 import { CreatePoolArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
 import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 
-const createPoolArgs: CreatePoolArgs = {
-  profileId: "your_profileId_here", // sender must be a profile member
-  strategy: "approved_strategy_contract", // approved strategy contract
+const poolCreationData: CreatePoolArgs = {
+  profileId: profileId, // sender must be a profile member
+  strategy: strategyAddress, // approved strategy contract
   initStrategyData: initStrategyData, // unique to the strategy
-  token: "token_address_here",
-  amount: "pool_amount_here",
+  token: NATIVE, // you need to change this to your token address
+  amount: BigInt(1e14),
   metadata: {
     protocol: BigInt(1),
-    pointer: "your_ipfs_hash",
+    pointer: pointer.IpfsHash,
   },
-  managers: ["pool_manager_address"],
+  managers: [
+    "add your wallet address here along with any other managers you want to add",
+  ],
 };
+
 
 const txData: TransactionData = allo.createPool(createPoolArgs);
 
@@ -251,93 +277,25 @@ console.log(`Transaction hash: ${hash}`);
 
 1. [10 mins] Create a new application
 
-- Code-along: `ApplicationContext.tsx`
-
-To create a new Registry instance, you need to provide the chain information. In
-this example, we're using the 5 (Goerli) chain information (see supported chains
-[here](https://github.com/allo-protocol/allo-v2/blob/main/contracts/README.md)).
-
-```javascript
-// Importy Registry from SDK
-import { Registry } from "@allo-team/allo-v2-sdk/";
-
-// Create a new Registry instance
-const registry = new Registry({ chain: 5 });
-```
-
-To create a new profile using the `createProfile` function:
-
-```javascript
-import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
-import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
-
-// Prepare the transaction arguments
-const createProfileArgs: CreateProfileArgs = {
-  nonce: 3,
-  name: "Developer",
-  metadata: {
-    protocol: BigInt(1),
-    pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
-  },
-  owner: "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
-  members: [
-    "0x5cdb35fADB8262A3f88863254c870c2e6A848CcA",
-    "0xE7eB5D2b5b188777df902e89c54570E7Ef4F59CE",
-  ],
-};
-
-// Create the transaction with the arguments
-const txData: TransactionData = registry.createProfile(createProfileArgs);
-
-// Client could be from ethers, viem, etc..
-const hash = await client.sendTransaction({
-  data: txData.data,
-  account,
-  value: BigInt(txData.value),
-});
-
-console.log(`Transaction hash: ${hash}`);
-```
-
-To start interacting with the MicroGrants contract, create a new instance of
-`MicroGrantsStrategy`:
-
-```javascript
-import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
-
-const strategy = new MicroGrantsStrategy({
-  chain: 5,
-});
-```
-
-If you are aware of the poolId, you can load that while creating the instance
-
-```javascript
-import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
-
-const strategy = new MicroGrantsStrategy({
-  chain: 5,
-  poolId: 1, // valid pool Id
-});
-```
-
+### Register a recipient
+- Code-along: `microgrants.ts`
 ```javascript
 const registerRecipientData = strategy.getRegisterRecipientData({
-      registryAnchor: anchorAddress as `0x${string}`,
-      recipientAddress: data.recipientAddress as `0x${string}`,
-      requestedAmount: data.requestedAmount,
-      metadata: {
-        protocol: BigInt(1),
-        pointer: pointer.IpfsHash,
-      },
-    });
+  registryAnchor: anchorAddress as `0x${string}`,
+  recipientAddress: "enter your wallet address here",
+  requestedAmount: data.requestedAmount,
+  metadata: {
+    protocol: BigInt(1),
+    pointer: pointer.IpfsHash,
+  },
+});
 ```
 
 1. [5 mins] Run the application locally
 
 ## Wrap up [5 mins]
 
-todo:
+- [5 mins] Q&A
 
 ## Resources
 
