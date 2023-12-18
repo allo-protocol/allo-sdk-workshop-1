@@ -34,7 +34,7 @@ import { allo } from "./allo";
 
 export const strategy = new MicroGrantsStrategy({
   chain: 421614,
-  rpc: "https://arb-sepolia.g.alchemy.com/v2/SLqkAkF6od4OWU62e-XWbuzmKvwjehYp",
+  rpc: "https://sepolia-rollup.arbitrum.io/rpc",
 });
 
 export const deployParams = strategy.getDeployParams("MicroGrantsv1");

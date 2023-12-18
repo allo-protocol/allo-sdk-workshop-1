@@ -36,7 +36,7 @@ const { chains, publicClient } = configureChains(
   [
     jsonRpcProvider({
       rpc: (chain) => ({
-        http: `https://arb-sepolia.g.alchemy.com/v2/SLqkAkF6od4OWU62e-XWbuzmKvwjehYp`,
+        http: `https://sepolia-rollup.arbitrum.io/rpc`,
       }),
     }),
   ]

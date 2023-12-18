@@ -5,7 +5,7 @@ import { deployMicrograntsStrategy } from "./microgrants";
 
 export const allo = new Allo({
   chain: 421614,
-  rpc: "https://arb-sepolia.g.alchemy.com/v2/SLqkAkF6od4OWU62e-XWbuzmKvwjehYp",
+  rpc: "https://sepolia-rollup.arbitrum.io/rpc",
 });
 
 export const createPool = async () => {
