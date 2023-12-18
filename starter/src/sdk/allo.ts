@@ -1,17 +1,16 @@
 import { getIPFSClient } from "@/services/ipfs";
 import { deployMicrograntsStrategy } from "./microgrants";
-// import { createProfile } from "./registry";
+import { createProfile } from "./registry";
+// import { Allo } from "@allo-team/allo-v2-sdk";
 
-export const allo = new Allo({
-  chain: 421614,
-  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
-});
+// create an allo instance
+// todo: snippet => createAlloInstance
 
 export const createPool = async () => {
   // Create a profile to use as the pool owner/creator
-  const profileId =
-    "0x1f40aa439b92e4c9b1ece733467bbffc8ffcdecd20c26624af0406b4019c305f";
-  // const profileId = await createProfile();
+  // const profileId =
+  //   "0x your new profile ID here";
+  const profileId = await createProfile();
 
   // Save metadata to IPFS -> returns a pointer we save on chain for the metadata
   const ipfsClient = getIPFSClient();

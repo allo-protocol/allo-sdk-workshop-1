@@ -12,8 +12,8 @@ import {
 } from "@/utils/common";
 import { checkIfRecipientIsIndexedQuery } from "@/utils/query";
 import { getProfileById } from "@/utils/request";
+import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
 import { CreatePoolArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
-// import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
 import {
   TransactionData,
   ZERO_ADDRESS,
@@ -28,17 +28,10 @@ import {
   waitForTransaction,
 } from "@wagmi/core";
 import { decodeEventLog } from "viem";
+import { allo } from "./allo";
 
 // create a strategy instance
 // todo: snippet => createStrategyInstance
-export const strategy = new MicroGrantsStrategy({
-  chain: 421614,
-  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
-});
-
-export const deployParams = strategy.getDeployParams("MicroGrantsv1");
-
-// console.log("deployParams", deployParams);
 
 // NOTE: This is the deploy params for the MicroGrantsv1 contract
 // 🚨 Please make sure your strategy type is correct or Spec will not index it.
@@ -46,6 +39,8 @@ export const deployParams = strategy.getDeployParams("MicroGrantsv1");
 // Hats: StrategyType.Hats
 // Gov: StrategyType.Gov
 // todo: snippet => deployParams
+
+// console.log("deployParams", deployParams);
 
 // This is called from `allo.ts` and is used to deploy the strategy contract and create a pool.
 // It is recommended you split this out into two functions, one to deploy the strategy and one to create the pool
@@ -98,9 +93,7 @@ export const deployMicrograntsStrategy = async (
       protocol: BigInt(1),
       pointer: pointer.IpfsHash,
     },
-    managers: [
-      "0x add your wallet address here along with any other managers you want to add",
-    ],
+    managers: ["0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42"],
   };
 
   // Prepare the transaction data
@@ -154,6 +147,7 @@ export const batchSetAllocator = async (data: SetAllocatorData[]) => {
     const strategyAddress = await allo.getStrategy(3);
     console.log("strategyAddress", strategyAddress);
 
+    // Set the contract address -> docs: 
     strategy.setContract(strategyAddress as `0x${string}`);
     const txData: TransactionData = strategy.getBatchSetAllocatorData(data);
 
@@ -188,7 +182,7 @@ export const createApplication = async (
   // NOTE: Import type from SDK - SetAllocatorData[]
   const allocatorData: SetAllocatorData[] = [
     {
-      allocatorAddress: "0x enter your wallet address here",
+      allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
       flag: true,
     },
   ];
@@ -234,7 +228,7 @@ export const createApplication = async (
   let recipientId;
   const strategy = new MicroGrantsStrategy({
     chain,
-    rpc: "https://arb-sepolia.g.alchemy.com/v2/SLqkAkF6od4OWU62e-XWbuzmKvwjehYp",
+    rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
     poolId,
   });
   let anchorAddress: string = ZERO_ADDRESS;
@@ -252,15 +246,6 @@ export const createApplication = async (
   console.log("anchorAddress", anchorAddress);
 
   // todo: snippet => getRegisterRecipientData
-  const registerRecipientData = strategy.getRegisterRecipientData({
-    registryAnchor: anchorAddress as `0x${string}`,
-    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42", // data.recipientAddress as `0x${string}`,
-    requestedAmount: BigInt(1e13), // data.requestedAmount,
-    metadata: {
-      protocol: BigInt(1),
-      pointer: pointer.IpfsHash,
-    },
-  });
 
   console.log("registerRecipientData", registerRecipientData);
 
