@@ -32,6 +32,10 @@ import { allo } from "./allo";
 
 // create a strategy instance
 // todo: snippet => createStrategyInstance
+export const strategy = new MicroGrantsStrategy({
+  chain: 421614,
+  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+});
 
 // NOTE: This is the deploy params for the MicroGrantsv1 contract
 // 🚨 Please make sure your strategy type is correct or Spec will not index it.
@@ -39,6 +43,7 @@ import { allo } from "./allo";
 // Hats: StrategyType.Hats
 // Gov: StrategyType.Gov
 // todo: snippet => deployParams
+export const deployParams = strategy.getDeployParams("MicroGrantsv1");
 
 // console.log("deployParams", deployParams);
 
@@ -82,6 +87,7 @@ export const deployMicrograntsStrategy = async (
 
   // get the init data
   // todo: snippet => getInitializeData
+  const initStrategyData = await strategy.getInitializeData(initParams);
 
   const poolCreationData: CreatePoolArgs = {
     profileId: profileId, // sender must be a profile member
@@ -93,13 +99,14 @@ export const deployMicrograntsStrategy = async (
       protocol: BigInt(1),
       pointer: pointer.IpfsHash,
     },
-    managers: [
-      "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
-    ],
+    managers: ["0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42"],
   };
 
   // Prepare the transaction data
   // todo: snippet => createPoolWithCustomStrategy
+  const createPoolData = await allo.createPoolWithCustomStrategy(
+    poolCreationData
+  );
 
   try {
     const tx = await sendTransaction({
@@ -149,7 +156,7 @@ export const batchSetAllocator = async (data: SetAllocatorData[]) => {
     const strategyAddress = await allo.getStrategy(3);
     console.log("strategyAddress", strategyAddress);
 
-    // Set the contract address -> docs: 
+    // Set the contract address -> docs:
     strategy.setContract(strategyAddress as `0x${string}`);
     const txData: TransactionData = strategy.getBatchSetAllocatorData(data);
 
@@ -190,7 +197,7 @@ export const createApplication = async (
   ];
 
   // todo: set the allocators defined above
-  await batchSetAllocator(allocatorData);
+  // await batchSetAllocator(allocatorData);
 
   console.log("Allocators set");
 
@@ -249,14 +256,14 @@ export const createApplication = async (
 
   // todo: snippet => getRegisterRecipientData
   const registerRecipientData = strategy.getRegisterRecipientData({
-  registryAnchor: anchorAddress as `0x${string}`,
-  recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
-  requestedAmount: data.requestedAmount,
-  metadata: {
-    protocol: BigInt(1),
-    pointer: pointer.IpfsHash,
-  },
-});
+    registryAnchor: anchorAddress as `0x${string}`,
+    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    requestedAmount: data.requestedAmount,
+    metadata: {
+      protocol: BigInt(1),
+      pointer: pointer.IpfsHash,
+    },
+  });
 
   console.log("registerRecipientData", registerRecipientData);
 

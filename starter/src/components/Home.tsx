@@ -21,7 +21,7 @@ const Home = () => {
   // Set this here so we dont have to create a new profile every time and we are not managing state in this demo.
   // We use the profileId to create a new application in `_newApplicationData`.
   const profileId =
-    "0x1f40aa439b92e4c9b1ece733467bbffc8ffcdecd20c26624af0406b4019c305f";
+    "0xd831f10f3f26eed3288b0815afbde1ef51edd27dcf9dcfebc58e3d61fefdd8b3";
   const _newApplicationData: TNewApplication = {
     name: "Test Application",
     website: "https://docs.allo.gitcoin.co",
@@ -90,7 +90,7 @@ const Home = () => {
               </button>
               <button
                 onClick={() => {
-                  createApplication(_newApplicationData, 421614, 3).then(
+                  createApplication(_newApplicationData, 421614, 7).then(
                     (res: any) => {
                       console.log("Recipient ID: ", res.recipientId);
                       alert("Applied with ID: " + res.recipientId);
