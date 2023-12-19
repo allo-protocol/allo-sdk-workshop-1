@@ -1,7 +1,7 @@
 import { RegistryABI } from "@/abi/Registry";
 import { wagmiConfigData } from "@/services/wagmi";
 import { getEventValues } from "@/utils/common";
-import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
+// import { Registry } from "@allo-team/allo-v2-sdk";
 import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 import { sendTransaction } from "@wagmi/core";
 
@@ -20,18 +20,14 @@ export const createProfile = async () => {
       protocol: BigInt(1),
       pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
     },
-    members: [
-      "0xE849b2a694184B8739a04C915518330757cDB18B",
-    ],
-    owner: "0xE849b2a694184B8739a04C915518330757cDB18B",
+    members: ["0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42"],
+    owner: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
   };
 
   console.log("Creating profile with args: ", createProfileArgs);
 
   // create the transaction with the arguments -> type comes from SDK
-  const txData: TransactionData = await registry.createProfile(
-    createProfileArgs
-  );
+  // todo: snippet => createProfileTx
 
   const txHash = await sendTransaction({
     to: txData.to,

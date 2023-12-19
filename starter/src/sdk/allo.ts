@@ -1,15 +1,15 @@
 import { getIPFSClient } from "@/services/ipfs";
 import { deployMicrograntsStrategy } from "./microgrants";
 import { createProfile } from "./registry";
+// import { Allo } from "@allo-team/allo-v2-sdk";
 
-// create a new instance of Allo
+// create an allo instance
 // todo: snippet => createAlloInstance
 
 export const createPool = async () => {
   // Create a profile to use as the pool owner/creator
-  // todo: you can add the profileId you generated intiially here so you don't have to create a new one each time.
   // const profileId =
-  //   "0xecc844434d1227f7593db591cfd56b1391a17d1dd31b464ccafd1bd8fe43ff55";
+  //   "0x your new profile ID here";
   const profileId = await createProfile();
 
   // Save metadata to IPFS -> returns a pointer we save on chain for the metadata
