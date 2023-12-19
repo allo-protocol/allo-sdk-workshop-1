@@ -197,7 +197,7 @@ export const createApplication = async (
   ];
 
   // todo: set the allocators defined above
-  // await batchSetAllocator(allocatorData);
+  await batchSetAllocator(allocatorData);
 
   console.log("Allocators set");
 
