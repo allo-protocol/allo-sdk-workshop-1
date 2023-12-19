@@ -93,7 +93,9 @@ export const deployMicrograntsStrategy = async (
       protocol: BigInt(1),
       pointer: pointer.IpfsHash,
     },
-    managers: ["0x your wallet address here"],
+    managers: [
+      "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    ],
   };
 
   // Prepare the transaction data
@@ -246,6 +248,15 @@ export const createApplication = async (
   console.log("anchorAddress", anchorAddress);
 
   // todo: snippet => getRegisterRecipientData
+  const registerRecipientData = strategy.getRegisterRecipientData({
+  registryAnchor: anchorAddress as `0x${string}`,
+  recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+  requestedAmount: data.requestedAmount,
+  metadata: {
+    protocol: BigInt(1),
+    pointer: pointer.IpfsHash,
+  },
+});
 
   console.log("registerRecipientData", registerRecipientData);
 
