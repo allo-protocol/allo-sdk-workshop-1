@@ -153,7 +153,8 @@ export const deployMicrograntsStrategy = async (
 
 export const batchSetAllocator = async (data: SetAllocatorData[]) => {
   if (strategy) {
-    const strategyAddress = await allo.getStrategy(3);
+    // todo: set the strategy ID from the one you deployed/created
+    const strategyAddress = await allo.getStrategy(11);
     console.log("strategyAddress", strategyAddress);
 
     // Set the contract address -> docs:
@@ -186,20 +187,6 @@ export const createApplication = async (
   poolId: number
 ): Promise<string> => {
   if (chain !== 421614) return "0x";
-
-  // Set some allocators for demo
-  // NOTE: Import type from SDK - SetAllocatorData[]
-  const allocatorData: SetAllocatorData[] = [
-    {
-      allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
-      flag: true,
-    },
-  ];
-
-  // todo: set the allocators defined above
-  await batchSetAllocator(allocatorData);
-
-  console.log("Allocators set");
 
   // const chainInfo: any | unknown = getChain(chain);
   let profileId = data.profileId;
@@ -329,10 +316,25 @@ export const createApplication = async (
 };
 
 export const allocate = async (data: Allocation) => {
-  if (strategy) {
-    // const chainInfo: any | unknown = getChain(421614);
+  // Set some allocators for demo
+  // NOTE: Import type from SDK - SetAllocatorData[]
+  const allocatorData: SetAllocatorData[] = [
+    {
+      allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+      flag: true,
+    },
+  ];
 
-    strategy.setPoolId(81);
+  // todo: set the allocators defined above
+  await batchSetAllocator(allocatorData);
+  console.log("Allocators set");
+
+  if (strategy) {
+    // todo: set your poolId here
+    strategy.setPoolId(11);
+
+    // Get the allocation data from the SDK
+    // todo: snippet => getAllocationData
     const txData: TransactionData = strategy.getAllocationData(
       data.recipientId,
       data.status

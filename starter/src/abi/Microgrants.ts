@@ -160,6 +160,11 @@ export const MicroGrantsABI: ContractAbi = [
   },
   {
     inputs: [],
+    name: "REGISTRATION_ACTIVE",
+    type: "error",
+  },
+  {
+    inputs: [],
     name: "REGISTRATION_NOT_ACTIVE",
     type: "error",
   },
@@ -697,7 +702,7 @@ export const MicroGrantsABI: ContractAbi = [
             type: "tuple",
           },
         ],
-        internalType: "struct MicroGrantsStrategy.Recipient",
+        internalType: "struct MicroGrantsBaseStrategy.Recipient",
         name: "",
         type: "tuple",
       },

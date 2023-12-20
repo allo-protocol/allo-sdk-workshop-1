@@ -30,7 +30,7 @@ const Home = () => {
     requestedAmount: parseUnits("0.1", 18),
     recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
     base64Image: "",
-    profileName: "",
+    profileName: "Jax Test",
     profileId: profileId,
   };
 
@@ -90,7 +90,7 @@ const Home = () => {
               </button>
               <button
                 onClick={() => {
-                  createApplication(_newApplicationData, 421614, 7).then(
+                  createApplication(_newApplicationData, 421614, 11).then(
                     (res: any) => {
                       console.log("Recipient ID: ", res.recipientId);
                       alert("Applied with ID: " + res.recipientId);
