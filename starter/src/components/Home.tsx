@@ -14,20 +14,19 @@ import {
 } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import Link from "next/link";
-import { parseUnits } from "viem";
 import { WagmiConfig } from "wagmi";
 
 const Home = () => {
   // Set this here so we dont have to create a new profile every time and we are not managing state in this demo.
   // We use the profileId to create a new application in `_newApplicationData`.
   const profileId =
-    "0xd831f10f3f26eed3288b0815afbde1ef51edd27dcf9dcfebc58e3d61fefdd8b3";
+    "0x922da2dc0216ddd6192442ce0a5d880263f841f7dc2ed3686f4f774b0d239852";
   const _newApplicationData: TNewApplication = {
     name: "Test Application",
     website: "https://docs.allo.gitcoin.co",
     description: "Test Application Description",
     email: "test@gitcoin.co",
-    requestedAmount: parseUnits("0.1", 18),
+    requestedAmount: BigInt(1e13),
     recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
     base64Image: "",
     profileName: "Jax Test",
@@ -90,7 +89,7 @@ const Home = () => {
               </button>
               <button
                 onClick={() => {
-                  createApplication(_newApplicationData, 421614, 11).then(
+                  createApplication(_newApplicationData, 421614, 12).then(
                     (res: any) => {
                       console.log("Recipient ID: ", res.recipientId);
                       alert("Applied with ID: " + res.recipientId);
