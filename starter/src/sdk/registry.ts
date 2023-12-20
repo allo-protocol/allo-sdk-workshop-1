@@ -25,7 +25,8 @@ export const createProfile = async () => {
       protocol: BigInt(1),
       pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
     },
-    members: ["0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42"],
+    // owner is added as a member by default
+    members: [],
     owner: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
   };
 

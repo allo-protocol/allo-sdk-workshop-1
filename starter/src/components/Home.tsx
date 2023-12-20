@@ -26,7 +26,7 @@ const Home = () => {
     website: "https://docs.allo.gitcoin.co",
     description: "Test Application Description",
     email: "test@gitcoin.co",
-    requestedAmount: BigInt(1e13),
+    requestedAmount: BigInt(1e12),
     recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
     base64Image: "",
     profileName: "Jax Test",
