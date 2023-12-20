@@ -4,22 +4,20 @@ import { getDefaultWallets } from "@rainbow-me/rainbowkit";
 import { configureChains, createConfig } from "wagmi";
 import {
   arbitrum,
+  arbitrumSepolia,
   base,
   celo,
-  goerli,
   mainnet,
   optimism,
   polygon,
 } from "wagmi/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
-
 import dotenv from "dotenv";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 dotenv.config();
 
 const stagingChains = [
   // celoAlfajores,
-  goerli,
+  arbitrumSepolia,
   // sepolia,
   // polygonMumbai,
   // arbitrumGoerli,
@@ -33,17 +31,13 @@ const availableChains =
     : productionChains;
 
 const { chains, publicClient } = configureChains(
-  [...stagingChains],
+  [arbitrumSepolia],
   [
-    alchemyProvider({
-      apiKey: "ajWJk5YwtfTZ5vCAhMg8I8L61XFhyJpa",
+    jsonRpcProvider({
+      rpc: (chain) => ({
+        http: `https://arbitrum-sepolia.blockpi.network/v1/rpc/public`,
+      }),
     }),
-    // Infura key here if you want to use it
-    // infuraProvider({
-    //   apiKey: "ae484befdd004b64bfe2059d3526a138",
-    // }),
-    // public provider for fallback
-    publicProvider(),
   ]
 );
 

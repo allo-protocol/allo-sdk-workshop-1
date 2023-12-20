@@ -140,7 +140,10 @@ In `allo.ts`:
 import { Allo } from "@allo-team/allo-v2-sdk/";
 
 // Create a new Allo instance
-const allo = new Allo({ chain: 5 });
+export const allo = new Allo({
+  chain: 421614,
+  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+});
 ```
 
 To create a new Registry instance, you need to provide the chain information. In
@@ -153,7 +156,10 @@ In `registry.ts`:
 import { Registry } from "@allo-team/allo-v2-sdk/";
 
 // Create a new Registry instance
-const registry = new Registry({ chain: 5 });
+export const registry = new Registry({
+  chain: 421614,
+  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+});
 ```
 
 To create a new profile using the `createProfile` function:
@@ -199,8 +205,9 @@ MicroGrantsStrategy in `microgrants.ts`:
 ```javascript
 import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
 
-const strategy = new MicroGrantsStrategy({
-  chain: 5,
+export const strategy = new MicroGrantsStrategy({
+  chain: 421614,
+  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
 });
 ```
 
@@ -209,10 +216,12 @@ const strategy = new MicroGrantsStrategy({
 ```javascript
 import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk/";
 
-const strategy = new MicroGrantsStrategy({
-  chain: 5,
-  poolId: 1, // valid pool Id
+export const strategy = new MicroGrantsStrategy({
+  chain: 421614,
+  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+  poolId: 1, // a valid pool ID
 });
+
 ```
 
 ### Get the strategy deploy parameters
@@ -257,11 +266,8 @@ const poolCreationData: CreatePoolArgs = {
     protocol: BigInt(1),
     pointer: pointer.IpfsHash,
   },
-  managers: [
-    "add your wallet address here along with any other managers you want to add",
-  ],
+  managers: ["0x your wallet address here"],
 };
-
 
 const txData: TransactionData = allo.createPool(createPoolArgs);
 
@@ -282,8 +288,8 @@ console.log(`Transaction hash: ${hash}`);
 ```javascript
 const registerRecipientData = strategy.getRegisterRecipientData({
   registryAnchor: anchorAddress as `0x${string}`,
-  recipientAddress: "enter your wallet address here",
-  requestedAmount: data.requestedAmount,
+  recipientAddress: "0x your wallet address", // data.recipientAddress as `0x${string}`,
+  requestedAmount: BigInt(1e13), // data.requestedAmount,
   metadata: {
     protocol: BigInt(1),
     pointer: pointer.IpfsHash,

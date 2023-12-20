@@ -14,7 +14,6 @@ import { checkIfRecipientIsIndexedQuery } from "@/utils/query";
 import { getProfileById } from "@/utils/request";
 import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
 import { CreatePoolArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
-// import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
 import {
   TransactionData,
   ZERO_ADDRESS,
@@ -22,7 +21,6 @@ import {
 import {
   Allocation,
   SetAllocatorData,
-  StrategyType,
 } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
 import {
   getWalletClient,
@@ -35,7 +33,8 @@ import { allo } from "./allo";
 // create a strategy instance
 // todo: snippet => createStrategyInstance
 export const strategy = new MicroGrantsStrategy({
-  chain: 5,
+  chain: 421614,
+  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
 });
 
 // NOTE: This is the deploy params for the MicroGrantsv1 contract
@@ -44,7 +43,9 @@ export const strategy = new MicroGrantsStrategy({
 // Hats: StrategyType.Hats
 // Gov: StrategyType.Gov
 // todo: snippet => deployParams
-export const deployParams = strategy.getDeployParams(StrategyType.MicroGrants);
+export const deployParams = strategy.getDeployParams("MicroGrantsv1");
+
+// console.log("deployParams", deployParams);
 
 // This is called from `allo.ts` and is used to deploy the strategy contract and create a pool.
 // It is recommended you split this out into two functions, one to deploy the strategy and one to create the pool
@@ -53,7 +54,7 @@ export const deployMicrograntsStrategy = async (
   pointer: any,
   profileId: string
 ) => {
-  const walletClient = await getWalletClient({ chainId: 5 });
+  const walletClient = await getWalletClient({ chainId: 421614 });
   // const profileId = await createProfile();
 
   let strategyAddress: string = "0x";
@@ -66,7 +67,7 @@ export const deployMicrograntsStrategy = async (
       args: [],
     });
 
-    const result = await waitForTransaction({ hash: hash, chainId: 5 });
+    const result = await waitForTransaction({ hash: hash, chainId: 421614 });
     strategyAddress = result.contractAddress!;
   } catch (e) {
     console.error("Deploying Strategy", e);
@@ -98,9 +99,7 @@ export const deployMicrograntsStrategy = async (
       protocol: BigInt(1),
       pointer: pointer.IpfsHash,
     },
-    managers: [
-      "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
-    ],
+    managers: ["0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42"],
   };
 
   // Prepare the transaction data
@@ -128,7 +127,7 @@ export const deployMicrograntsStrategy = async (
 
     // NOTE: Index Pool Example
     // const pollingData: any = {
-    //   chainId: 5,
+    //   chainId: 421614,
     //   poolId: poolId,
     // };
     // let pollingResult = await pollUntilDataIsIndexed(
@@ -154,11 +153,15 @@ export const deployMicrograntsStrategy = async (
 
 export const batchSetAllocator = async (data: SetAllocatorData[]) => {
   if (strategy) {
-    const strategyAddress = await allo.getStrategy(81);
+    // todo: set the strategy ID from the one you deployed/created
+    const strategyAddress = await allo.getStrategy(11);
     console.log("strategyAddress", strategyAddress);
 
+    // Set the contract address -> docs:
     strategy.setContract(strategyAddress as `0x${string}`);
     const txData: TransactionData = strategy.getBatchSetAllocatorData(data);
+
+    console.log("txData", txData);
 
     try {
       const tx = await sendTransaction({
@@ -178,53 +181,12 @@ export const batchSetAllocator = async (data: SetAllocatorData[]) => {
   }
 };
 
-export const allocate = async (data: Allocation) => {
-  if (strategy) {
-    // const chainInfo: any | unknown = getChain(5);
-
-    strategy.setPoolId(81);
-    const txData: TransactionData = strategy.getAllocationData(
-      data.recipientId,
-      data.status
-    );
-
-    try {
-      const tx = await sendTransaction({
-        to: txData.to as string,
-        data: txData.data,
-        value: BigInt(txData.value),
-      });
-
-      await wagmiConfigData.publicClient.waitForTransactionReceipt({
-        hash: tx.hash,
-      });
-
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-    } catch (e) {
-      console.log("Allocating", e);
-    }
-  }
-};
-
 export const createApplication = async (
   data: TNewApplication,
   chain: number,
   poolId: number
 ): Promise<string> => {
-  if (chain !== 5) return "0x";
-
-  // Set some allocators for demo
-  // NOTE: Import type from SDK - SetAllocatorData[]
-  const allocatorData: SetAllocatorData[] = [
-    {
-      allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
-      flag: true,
-    },
-  ];
-
-  // todo: set the allocators defined above
-  // await batchSetAllocator(allocatorData);
-  // console.log("Allocators set");
+  if (chain !== 421614) return "0x";
 
   // const chainInfo: any | unknown = getChain(chain);
   let profileId = data.profileId;
@@ -260,13 +222,14 @@ export const createApplication = async (
 
   // 3. Register application to pool
   let recipientId;
-
-  // todo: snippet => createStrategyInstanceWithPoolId
-  const strategy = new MicroGrantsStrategy({ chain, poolId });
-
+  const strategy = new MicroGrantsStrategy({
+    chain,
+    rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+    poolId,
+  });
   let anchorAddress: string = ZERO_ADDRESS;
 
-  // get the anchor address from the profile
+  // Get the anchor address for the profileId
   if (ethereumHashRegExp.test(profileId || "")) {
     anchorAddress = (
       await getProfileById({
@@ -280,14 +243,14 @@ export const createApplication = async (
 
   // todo: snippet => getRegisterRecipientData
   const registerRecipientData = strategy.getRegisterRecipientData({
-  registryAnchor: anchorAddress as `0x${string}`,
-  recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
-  requestedAmount: data.requestedAmount,
-  metadata: {
-    protocol: BigInt(1),
-    pointer: pointer.IpfsHash,
-  },
-});
+    registryAnchor: anchorAddress as `0x${string}`,
+    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    requestedAmount: data.requestedAmount,
+    metadata: {
+      protocol: BigInt(1),
+      pointer: pointer.IpfsHash,
+    },
+  });
 
   console.log("registerRecipientData", registerRecipientData);
 
@@ -350,4 +313,47 @@ export const createApplication = async (
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
   return recipientId;
+};
+
+export const allocate = async (data: Allocation) => {
+  // Set some allocators for demo
+  // NOTE: Import type from SDK - SetAllocatorData[]
+  const allocatorData: SetAllocatorData[] = [
+    {
+      allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+      flag: true,
+    },
+  ];
+
+  // todo: set the allocators defined above
+  await batchSetAllocator(allocatorData);
+  console.log("Allocators set");
+
+  if (strategy) {
+    // todo: set your poolId here
+    strategy.setPoolId(11);
+
+    // Get the allocation data from the SDK
+    // todo: snippet => getAllocationData
+    const txData: TransactionData = strategy.getAllocationData(
+      data.recipientId,
+      data.status
+    );
+
+    try {
+      const tx = await sendTransaction({
+        to: txData.to as string,
+        data: txData.data,
+        value: BigInt(txData.value),
+      });
+
+      await wagmiConfigData.publicClient.waitForTransactionReceipt({
+        hash: tx.hash,
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+    } catch (e) {
+      console.log("Allocating", e);
+    }
+  }
 };
