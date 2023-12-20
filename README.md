@@ -83,8 +83,8 @@ Outline of project:
   # Change into the directory
   cd allo-sdk-workshop-1
 
-  # Checkout the start branch
-  git checkout start
+  # Checkout the main branch
+  git checkout main
 
   cd starter
   # You should now be in the /starter directory
@@ -198,6 +198,18 @@ console.log(`Transaction hash: ${hash}`);
 
 Let's run the app here and create a new profile. You can see the transaction result in the console and alert.
 <img width="1159" alt="Screenshot 2023-12-16 at 11 52 34 AM" src="https://github.com/allo-protocol/allo-sdk-workshop-1/assets/9419140/44fc7f3e-d1ee-4d0e-bbb0-49d6a1388de4">
+
+🤚 We need to update the `Home.tsx` file with the new profile ID you just created.
+```javascript
+22  const profileId =
+23    "0x add your profile ID here";
+```
+and in `allo.ts` uncomment the `profileId` variable and comment out the `createProfile` function.
+```javascript
+11  const profileId =
+12    "0x your new profile ID here";
+13  // const profileId = await createProfile();
+```
 
 To start interacting with the MicroGrants contract, create a new instance of
 MicroGrantsStrategy in `microgrants.ts`:
