@@ -14,7 +14,6 @@ import {
 } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import Link from "next/link";
-import { parseUnits } from "viem";
 import { WagmiConfig } from "wagmi";
 
 const Home = () => {
@@ -27,7 +26,8 @@ const Home = () => {
     website: "https://docs.allo.gitcoin.co",
     description: "Test Application Description",
     email: "test@gitcoin.co",
-    requestedAmount: parseUnits("0.1", 18),
+    // 🚨 This amount cannot be greater than the maxRequestedAmount of the pool or the tx will fail..
+    requestedAmount: BigInt(1e13),
     recipientAddress: "0xE849b2a694184B8739a04C915518330757cDB18B",
     base64Image: "",
     profileName: "",
