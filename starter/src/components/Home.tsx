@@ -2,7 +2,7 @@
 
 import { TNewApplication } from "@/app/types";
 import { createPool } from "@/sdk/allo";
-import { createApplication } from "@/sdk/microgrants";
+import { allocate, createApplication } from "@/sdk/microgrants";
 import { createProfile } from "@/sdk/registry";
 import { chainData, wagmiConfigData } from "@/services/wagmi";
 import { Allocation } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
@@ -20,7 +20,7 @@ const Home = () => {
   // Set this here so we dont have to create a new profile every time and we are not managing state in this demo.
   // We use the profileId to create a new application in `_newApplicationData`.
   const profileId =
-    "0x1f40aa439b92e4c9b1ece733467bbffc8ffcdecd20c26624af0406b4019c305f";
+    "0x9454a39a8e21c0441853b41fc1376be8ba6d270391d5f2a4bd3c75a577f1bb34";
   const _newApplicationData: TNewApplication = {
     name: "Test Application",
     website: "https://docs.allo.gitcoin.co",
@@ -28,14 +28,14 @@ const Home = () => {
     email: "test@gitcoin.co",
     // 🚨 This amount cannot be greater than the maxRequestedAmount of the pool or the tx will fail..
     requestedAmount: BigInt(1e13),
-    recipientAddress: "0xE849b2a694184B8739a04C915518330757cDB18B",
+    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
     base64Image: "",
     profileName: "",
     profileId: profileId,
   };
 
   const _allocationData: Allocation = {
-    recipientId: "0xE849b2a694184B8739a04C915518330757cDB18B",
+    recipientId: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
     status: Status.Accepted,
   };
 
@@ -90,7 +90,7 @@ const Home = () => {
               </button>
               <button
                 onClick={() => {
-                  createApplication(_newApplicationData, 421614, 3).then(
+                  createApplication(_newApplicationData, 421614, 13).then(
                     (res: any) => {
                       console.log("Recipient ID: ", res.recipientId);
                       alert("Applied with ID: " + res.recipientId);
@@ -101,8 +101,7 @@ const Home = () => {
               >
                 Apply to Pool
               </button>
-              {/* WIP */}
-              {/* <button
+              <button
                 onClick={() => {
                   allocate(_allocationData).then((res: any) => {
                     console.log("Recipient ID: ", res.recipientId);
@@ -112,7 +111,7 @@ const Home = () => {
                 className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2"
               >
                 Allocate to Pool
-              </button> */}
+              </button>
             </div>
           </div>
 

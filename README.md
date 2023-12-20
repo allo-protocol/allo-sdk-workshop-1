@@ -83,8 +83,8 @@ Outline of project:
   # Change into the directory
   cd allo-sdk-workshop-1
 
-  # Checkout the start branch
-  git checkout start
+  # Checkout the main branch
+  git checkout main
 
   cd starter
   # You should now be in the /starter directory
@@ -106,7 +106,7 @@ Outline of project:
   npm install --legacy-peer-deps
 ```
 
-And to add the Allo SDK we run:
+And to add the Allo SDK we run (current version 1.0.33):
 
 ```bash
   bun install @allo-team/allo-v2-sdk
@@ -295,6 +295,12 @@ const registerRecipientData = strategy.getRegisterRecipientData({
     pointer: pointer.IpfsHash,
   },
 });
+```
+
+### Allocate to a recipient
+- Code-along: `microgrants.ts`
+```javascript
+
 ```
 
 1. [5 mins] Run the application locally

@@ -1,12 +1,17 @@
 import { RegistryABI } from "@/abi/Registry";
 import { wagmiConfigData } from "@/services/wagmi";
 import { getEventValues } from "@/utils/common";
-// import { Registry } from "@allo-team/allo-v2-sdk";
+import { Registry } from "@allo-team/allo-v2-sdk";
+import { TransactionData } from "@allo-team/allo-v2-sdk/dist/Common/types";
 import { CreateProfileArgs } from "@allo-team/allo-v2-sdk/dist/Registry/types";
 import { sendTransaction } from "@wagmi/core";
 
 // create a registry instance
 // todo: snippet => createRegistryInstance
+export const registry = new Registry({
+  chain: 421614,
+  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+});
 
 // NOTE: Update this function to use your own data.
 export const createProfile = async () => {
@@ -20,7 +25,7 @@ export const createProfile = async () => {
       protocol: BigInt(1),
       pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
     },
-    members: ["0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42"],
+    members: [],
     owner: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
   };
 
@@ -28,6 +33,9 @@ export const createProfile = async () => {
 
   // create the transaction with the arguments -> type comes from SDK
   // todo: snippet => createProfileTx
+  const txData: TransactionData = await registry.createProfile(
+    createProfileArgs
+  );
 
   const txHash = await sendTransaction({
     to: txData.to,
