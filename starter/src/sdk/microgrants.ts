@@ -6,11 +6,8 @@ import {
   NATIVE,
   ethereumHashRegExp,
   extractLogByEventName,
-  getEventValues,
-  pollUntilDataIsIndexed,
-  pollUntilMetadataIsAvailable,
+  getEventValues
 } from "@/utils/common";
-import { checkIfRecipientIsIndexedQuery } from "@/utils/query";
 import { getProfileById } from "@/utils/request";
 import { MicroGrantsStrategy } from "@allo-team/allo-v2-sdk";
 import { CreatePoolArgs } from "@allo-team/allo-v2-sdk/dist/Allo/types";
@@ -75,7 +72,7 @@ export const deployMicrograntsStrategy = async (
 
   // NOTE: Timestamps should be in seconds and start should be a few minutes in the future to account for transaction times.7
   const startDateInSeconds = Math.floor(new Date().getTime() / 1000) + 300;
-  const endDateInSeconds = Math.floor(new Date().getTime() / 1000) + 10000;
+  const endDateInSeconds = Math.floor(new Date().getTime() / 1000) + 900;
 
   const initParams: any = {
     useRegistryAnchor: true,
@@ -281,33 +278,32 @@ export const createApplication = async (
   }
 
   // 4. Poll indexer for recipientId
-  const pollingData: any = {
-    chainId: chain,
-    poolId: poolId,
-    recipientId: recipientId.toLowerCase(),
-  };
-  const pollingResult: boolean = await pollUntilDataIsIndexed(
-    checkIfRecipientIsIndexedQuery,
-    pollingData,
-    "microGrantRecipient"
-  );
-
-  if (pollingResult) {
-    // do something with result...
-  } else {
-    console.error("Polling ERROR");
-  }
+  // const pollingData: any = {
+  //   chainId: chain,
+  //   poolId: poolId,
+  //   recipientId: recipientId.toLowerCase(),
+  // };
+  // const pollingResult: boolean = await pollUntilDataIsIndexed(
+  //   checkIfRecipientIsIndexedQuery,
+  //   pollingData,
+  //   "microGrantRecipient"
+  // );
+  // if (pollingResult) {
+  //   // do something with result...
+  // } else {
+  //   console.error("Polling ERROR");
+  // }
 
   // 5. Index Metadata
-  const pollingMetadataResult = await pollUntilMetadataIsAvailable(
-    pointer.IpfsHash
-  );
+  // const pollingMetadataResult = await pollUntilMetadataIsAvailable(
+  //   pointer.IpfsHash
+  // );
 
-  if (pollingMetadataResult) {
-    // do something with result...
-  } else {
-    console.error("Polling ERROR");
-  }
+  // if (pollingMetadataResult) {
+  //   // do something with result...
+  // } else {
+  //   console.error("Polling ERROR");
+  // }
 
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
@@ -315,28 +311,11 @@ export const createApplication = async (
 };
 
 export const allocate = async (data: Allocation) => {
-  // Set some allocators for demo
-  // NOTE: Import type from SDK - SetAllocatorData[]
-  const allocatorData: SetAllocatorData[] = [
-    {
-      allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
-      flag: true,
-    },
-  ];
-
-  // todo: set the allocators defined above
-  await batchSetAllocator(allocatorData);
-
-  console.log("Allocators set");
-
   if (strategy) {
-    // todo: set poolId with the one you created earlier
-    const strategy = new MicroGrantsStrategy({
-      chain: 421614,
-      rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
-      poolId: 13,
-    });
+    // todo: set your poolId here
+    strategy.setPoolId(15);
 
+    // Get the allocation data from the SDK
     // todo: snippet => getAllocationData
     const txData: TransactionData = strategy.getAllocationData(
       data.recipientId,

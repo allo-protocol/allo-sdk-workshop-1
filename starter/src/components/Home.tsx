@@ -2,10 +2,17 @@
 
 import { TNewApplication } from "@/app/types";
 import { createPool } from "@/sdk/allo";
-import { allocate, createApplication } from "@/sdk/microgrants";
+import {
+  allocate,
+  batchSetAllocator,
+  createApplication,
+} from "@/sdk/microgrants";
 import { createProfile } from "@/sdk/registry";
 import { chainData, wagmiConfigData } from "@/services/wagmi";
-import { Allocation } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
+import {
+  Allocation,
+  SetAllocatorData,
+} from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
 import { Status } from "@allo-team/allo-v2-sdk/dist/strategies/types";
 import {
   ConnectButton,
@@ -26,16 +33,22 @@ const Home = () => {
     website: "https://docs.allo.gitcoin.co",
     description: "Test Application Description",
     email: "test@gitcoin.co",
-    // 🚨 This amount cannot be greater than the maxRequestedAmount of the pool or the tx will fail..
-    requestedAmount: BigInt(1e13),
-    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    requestedAmount: BigInt(1e12),
+    recipientAddress: "0xE849b2a694184B8739a04C915518330757cDB18B",
     base64Image: "",
     profileName: "",
     profileId: profileId,
   };
 
+  const allocatorData: SetAllocatorData[] = [
+    {
+      allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+      flag: true,
+    },
+  ];
+
   const _allocationData: Allocation = {
-    recipientId: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    recipientId: "0xE849b2a694184B8739a04C915518330757cDB18B",
     status: Status.Accepted,
   };
 
@@ -90,16 +103,27 @@ const Home = () => {
               </button>
               <button
                 onClick={() => {
-                  createApplication(_newApplicationData, 421614, 13).then(
+                  createApplication(_newApplicationData, 421614, 15).then(
                     (res: any) => {
                       console.log("Recipient ID: ", res.recipientId);
-                      alert("Applied with ID: " + res.recipientId);
+                      // alert("Applied with ID: " + res.recipientId);
                     }
                   );
                 }}
                 className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2"
               >
                 Apply to Pool
+              </button>
+              {/* WIP */}
+              <button
+                onClick={() => {
+                  batchSetAllocator(allocatorData).then((res: any) => {
+                    console.log("Allocator(s) set", res);
+                  });
+                }}
+                className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2"
+              >
+                Add Allocator(s)
               </button>
               <button
                 onClick={() => {
@@ -110,7 +134,7 @@ const Home = () => {
                 }}
                 className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2"
               >
-                Allocate to Pool
+                Allocate
               </button>
             </div>
           </div>
