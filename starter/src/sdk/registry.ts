@@ -23,9 +23,9 @@ export const createProfile = async () => {
       pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
     },
     members: [
-      "0xE849b2a694184B8739a04C915518330757cDB18B",
+      "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
     ],
-    owner: "0xE849b2a694184B8739a04C915518330757cDB18B",
+    owner: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
   };
 
   console.log("Creating profile with args: ", createProfileArgs);

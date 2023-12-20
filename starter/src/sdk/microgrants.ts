@@ -99,7 +99,7 @@ export const deployMicrograntsStrategy = async (
       pointer: pointer.IpfsHash,
     },
     managers: [
-      "0xE849b2a694184B8739a04C915518330757cDB18B",
+      "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
     ],
   };
 
@@ -217,15 +217,14 @@ export const createApplication = async (
   // NOTE: Import type from SDK - SetAllocatorData[]
   const allocatorData: SetAllocatorData[] = [
     {
-      allocatorAddress: "0xE849b2a694184B8739a04C915518330757cDB18B",
+      allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
       flag: true,
     },
   ];
 
   // todo: set the allocators defined above
-  await batchSetAllocator(allocatorData);
-
-  console.log("Allocators set");
+  // await batchSetAllocator(allocatorData);
+  // console.log("Allocators set");
 
   // const chainInfo: any | unknown = getChain(chain);
   let profileId = data.profileId;
@@ -282,7 +281,7 @@ export const createApplication = async (
   // todo: snippet => getRegisterRecipientData
   const registerRecipientData = strategy.getRegisterRecipientData({
   registryAnchor: anchorAddress as `0x${string}`,
-  recipientAddress: "0xE849b2a694184B8739a04C915518330757cDB18B",
+  recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
   requestedAmount: data.requestedAmount,
   metadata: {
     protocol: BigInt(1),

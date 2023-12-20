@@ -14,28 +14,27 @@ import {
 } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import Link from "next/link";
-import { parseUnits } from "viem";
 import { WagmiConfig } from "wagmi";
 
 const Home = () => {
   // Set this here so we dont have to create a new profile every time and we are not managing state in this demo.
   // We use the profileId to create a new application in `_newApplicationData`.
   const profileId =
-    "0xecc844434d1227f7593db591cfd56b1391a17d1dd31b464ccafd1bd8fe43ff55";
+    "0x53a437d5099132824b319c8f39014b9f6024ff4c2d32c7ca28a0dc5600e79973";
   const _newApplicationData: TNewApplication = {
     name: "Test Application",
     website: "https://docs.allo.gitcoin.co",
     description: "Test Application Description",
     email: "test@gitcoin.co",
-    requestedAmount: parseUnits("0.1", 18),
-    recipientAddress: "0xE849b2a694184B8739a04C915518330757cDB18B",
+    requestedAmount: BigInt(1e12),
+    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
     base64Image: "",
     profileName: "",
     profileId: profileId,
   };
 
   const _allocationData: Allocation = {
-    recipientId: "0xE849b2a694184B8739a04C915518330757cDB18B",
+    recipientId: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
     status: Status.Accepted,
   };
 
@@ -91,7 +90,7 @@ const Home = () => {
               <button
                 onClick={() => {
                   // todo: add your new created poolID
-                  createApplication(_newApplicationData, 5, 81).then(
+                  createApplication(_newApplicationData, 5, 94).then(
                     (res: any) => {
                       console.log("Recipient ID: ", res.recipientId);
                       alert("Applied with ID: " + res.recipientId);

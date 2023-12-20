@@ -10,7 +10,7 @@ export const createPool = async () => {
   // Create a profile to use as the pool owner/creator
   // todo: you can add the profileId you generated intiially here so you don't have to create a new one each time.
   const profileId =
-    "0xecc844434d1227f7593db591cfd56b1391a17d1dd31b464ccafd1bd8fe43ff55";
+    "0x53a437d5099132824b319c8f39014b9f6024ff4c2d32c7ca28a0dc5600e79973";
   // const profileId = await createProfile();
 
   // Save metadata to IPFS
