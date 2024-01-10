@@ -99,7 +99,7 @@ export const deployMicrograntsStrategy = async (
       protocol: BigInt(1),
       pointer: pointer.IpfsHash,
     },
-    managers: ["0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42"],
+    managers: ["0x8C180840fcBb90CE8464B4eCd12ab0f840c6647C"],
   };
 
   // Prepare the transaction data
@@ -154,7 +154,7 @@ export const deployMicrograntsStrategy = async (
 export const batchSetAllocator = async (data: SetAllocatorData[]) => {
   if (strategy) {
     // todo: set the strategy ID from the one you deployed/created
-    const strategyAddress = await allo.getStrategy(11);
+    const strategyAddress = await allo.getStrategy(186);
     console.log("strategyAddress", strategyAddress);
 
     // Set the contract address -> docs:
@@ -244,7 +244,7 @@ export const createApplication = async (
   // todo: snippet => getRegisterRecipientData
   const registerRecipientData = strategy.getRegisterRecipientData({
     registryAnchor: anchorAddress as `0x${string}`,
-    recipientAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    recipientAddress: "0x31a874d092e48610d61ea0d68b87a8d9b0657a14",
     requestedAmount: data.requestedAmount,
     metadata: {
       protocol: BigInt(1),
@@ -320,18 +320,20 @@ export const allocate = async (data: Allocation) => {
   // NOTE: Import type from SDK - SetAllocatorData[]
   const allocatorData: SetAllocatorData[] = [
     {
-      allocatorAddress: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+      allocatorAddress: "0x8C180840fcBb90CE8464B4eCd12ab0f840c6647C",
       flag: true,
     },
   ];
 
   // todo: set the allocators defined above
   await batchSetAllocator(allocatorData);
-  console.log("Allocators set");
+  // console.log("Allocators set");
 
   if (strategy) {
     // todo: set your poolId here
-    strategy.setPoolId(11);
+    strategy.setPoolId(186);
+
+    console.log(data)
 
     // Get the allocation data from the SDK
     // todo: snippet => getAllocationData

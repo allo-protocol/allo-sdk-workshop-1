@@ -27,7 +27,7 @@ export const createProfile = async () => {
     },
     // owner is added as a member by default
     members: [],
-    owner: "0x1fD06f088c720bA3b7a3634a8F021Fdd485DcA42",
+    owner: "0x8C180840fcBb90CE8464B4eCd12ab0f840c6647C",
   };
 
   console.log("Creating profile with args: ", createProfileArgs);
