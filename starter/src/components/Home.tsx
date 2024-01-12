@@ -1,6 +1,7 @@
 "use client";
 
 import { TNewApplication } from "@/app/types";
+import { base64Image, commonConfig } from "@/config/common";
 import { createPool } from "@/sdk/allo";
 import { allocate, createApplication } from "@/sdk/microgrants";
 import { createProfile } from "@/sdk/registry";
@@ -19,22 +20,21 @@ import { WagmiConfig } from "wagmi";
 const Home = () => {
   // Set this here so we dont have to create a new profile every time and we are not managing state in this demo.
   // We use the profileId to create a new application in `_newApplicationData`.
-  const profileId =
-    "0x13ffe09671f07a4eb6bfcf96fa58d93bedabf721d26d0cc162f267504816f3db";
+
   const _newApplicationData: TNewApplication = {
-    name: "Test Application",
-    website: "https://docs.allo.gitcoin.co",
-    description: "Test Application Description",
-    email: "test@gitcoin.co",
+    name: commonConfig.application.name,
+    website: commonConfig.application.website,
+    description: commonConfig.application.description,
+    email: commonConfig.application.email,
     requestedAmount: BigInt(1e12),
-    recipientAddress: "0xbd35e5f5ec336eef6946314e668ed95aed4552ac",
-    base64Image: "",
-    profileName: "Jax Test",
-    profileId: profileId,
+    recipientAddress: commonConfig.recipientId,
+    base64Image: base64Image,
+    profileName: commonConfig.application.profileName,
+    profileId: commonConfig.application.profileId,
   };
 
   const _allocationData: Allocation = {
-    recipientId: "0xbd35e5f5ec336eef6946314e668ed95aed4552ac",
+    recipientId: commonConfig.recipientId,
     status: Status.Accepted,
   };
 
@@ -62,7 +62,7 @@ const Home = () => {
           <div className="-mt-40">
             A general purpose protocol for the efficient allocation of capital.
           </div>
-
+          {/*  Button Group */}
           <div>
             <div className="flex flex-row">
               <button
@@ -89,23 +89,22 @@ const Home = () => {
               </button>
               <button
                 onClick={() => {
-                  createApplication(_newApplicationData, 421614, 186).then(
-                    (res: any) => {
-                      console.log("Recipient ID: ", res.recipientId);
-                      alert("Applied with ID: " + res.recipientId);
-                    }
-                  );
+                  createApplication(
+                    _newApplicationData,
+                    commonConfig.chainId,
+                    commonConfig.poolId
+                  ).then((res: any) => {
+                    console.log("Recipient ID: ", res && res.recipientId);
+                  });
                 }}
                 className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2"
               >
                 Apply to Pool
               </button>
-              {/* WIP */}
               <button
                 onClick={() => {
-                  allocate(_allocationData).then((res: any) => {
+                  allocate(_allocationData).then(() => {
                     console.log("Allocated");
-                    // alert("Applied with ID: " + res.recipientId);
                   });
                 }}
                 className="bg-gradient-to-r from-[#ff00a0] to-[#d75fab] text-white rounded-lg mx-2 px-4 py-2"

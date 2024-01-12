@@ -1,4 +1,5 @@
 import { RegistryABI } from "@/abi/Registry";
+import { commonConfig } from "@/config/common";
 import { wagmiConfigData } from "@/services/wagmi";
 import { getEventValues } from "@/utils/common";
 import { Registry } from "@allo-team/allo-v2-sdk";
@@ -9,25 +10,19 @@ import { sendTransaction } from "@wagmi/core";
 // create a registry instance
 // todo: snippet => createRegistryInstance
 export const registry = new Registry({
-  chain: 421614,
-  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+  chain: commonConfig.chainId,
+  rpc: commonConfig.rpc,
 });
 
 // NOTE: Update this function to use your own data.
 export const createProfile = async () => {
   // prepare the arguments -> type comes from the SDK
   const createProfileArgs: CreateProfileArgs = {
-    // random number to prevent nonce reuse, this is required.
-    // NOTE: The profile ID id based on the provided nonce and the caller's address.
-    nonce: Math.floor(Math.random() * 10000),
-    name: "Allo Workshop",
-    metadata: {
-      protocol: BigInt(1),
-      pointer: "bafybeia4khbew3r2mkflyn7nzlvfzcb3qpfeftz5ivpzfwn77ollj47gqi",
-    },
-    // owner is added as a member by default
-    members: [],
-    owner: "0x8C180840fcBb90CE8464B4eCd12ab0f840c6647C",
+    nonce: commonConfig.nonce,
+    name: commonConfig.profileName,
+    metadata: commonConfig.metadata,
+    owner: commonConfig.ownerAddress,
+    members: commonConfig.members,
   };
 
   console.log("Creating profile with args: ", createProfileArgs);

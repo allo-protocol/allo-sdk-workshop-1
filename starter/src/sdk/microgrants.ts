@@ -1,5 +1,6 @@
 import { MicroGrantsABI } from "@/abi/Microgrants";
 import { TNewApplication } from "@/app/types";
+import { commonConfig } from "@/config/common";
 import { getIPFSClient } from "@/services/ipfs";
 import { wagmiConfigData } from "@/services/wagmi";
 import {
@@ -20,6 +21,7 @@ import {
 } from "@allo-team/allo-v2-sdk/dist/Common/types";
 import {
   Allocation,
+  InitializeParams,
   SetAllocatorData,
 } from "@allo-team/allo-v2-sdk/dist/strategies/MicroGrantsStrategy/types";
 import {
@@ -31,10 +33,10 @@ import { decodeEventLog } from "viem";
 import { allo } from "./allo";
 
 // create a strategy instance
-// todo: snippet => createStrategyInstance
+// ? snippet => createStrategyInstance
 export const strategy = new MicroGrantsStrategy({
-  chain: 421614,
-  rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+  chain: commonConfig.chainId,
+  rpc: commonConfig.rpc,
 });
 
 // NOTE: This is the deploy params for the MicroGrantsv1 contract
@@ -42,7 +44,7 @@ export const strategy = new MicroGrantsStrategy({
 // MicroGrants: StrategyType.MicroGrants
 // Hats: StrategyType.Hats
 // Gov: StrategyType.Gov
-// todo: snippet => deployParams
+// ? snippet => deployParams
 export const deployParams = strategy.getDeployParams("MicroGrantsv1");
 
 // console.log("deployParams", deployParams);
@@ -54,8 +56,7 @@ export const deployMicrograntsStrategy = async (
   pointer: any,
   profileId: string
 ) => {
-  const walletClient = await getWalletClient({ chainId: 421614 });
-  // const profileId = await createProfile();
+  const walletClient = await getWalletClient({ chainId: commonConfig.chainId });
 
   let strategyAddress: string = "0x";
   let poolId = -1;
@@ -67,7 +68,10 @@ export const deployMicrograntsStrategy = async (
       args: [],
     });
 
-    const result = await waitForTransaction({ hash: hash, chainId: 421614 });
+    const result = await waitForTransaction({
+      hash: hash,
+      chainId: commonConfig.chainId,
+    });
     strategyAddress = result.contractAddress!;
   } catch (e) {
     console.error("Deploying Strategy", e);
@@ -77,7 +81,7 @@ export const deployMicrograntsStrategy = async (
   const startDateInSeconds = Math.floor(new Date().getTime() / 1000) + 300;
   const endDateInSeconds = Math.floor(new Date().getTime() / 1000) + 10000;
 
-  const initParams: any = {
+  const initParams: InitializeParams = {
     useRegistryAnchor: true,
     allocationStartTime: BigInt(startDateInSeconds),
     allocationEndTime: BigInt(endDateInSeconds),
@@ -86,7 +90,7 @@ export const deployMicrograntsStrategy = async (
   };
 
   // get the init data
-  // todo: snippet => getInitializeData
+  // ? snippet => getInitializeData
   const initStrategyData = await strategy.getInitializeData(initParams);
 
   const poolCreationData: CreatePoolArgs = {
@@ -99,11 +103,11 @@ export const deployMicrograntsStrategy = async (
       protocol: BigInt(1),
       pointer: pointer.IpfsHash,
     },
-    managers: ["0x8C180840fcBb90CE8464B4eCd12ab0f840c6647C"],
+    managers: commonConfig.managers,
   };
 
   // Prepare the transaction data
-  // todo: snippet => createPoolWithCustomStrategy
+  // ? snippet => createPoolWithCustomStrategy
   const createPoolData = await allo.createPoolWithCustomStrategy(
     poolCreationData
   );
@@ -154,7 +158,7 @@ export const deployMicrograntsStrategy = async (
 export const batchSetAllocator = async (data: SetAllocatorData[]) => {
   if (strategy) {
     // todo: set the strategy ID from the one you deployed/created
-    const strategyAddress = await allo.getStrategy(186);
+    const strategyAddress = await allo.getStrategy(commonConfig.poolId);
     console.log("strategyAddress", strategyAddress);
 
     // Set the contract address -> docs:
@@ -224,7 +228,7 @@ export const createApplication = async (
   let recipientId;
   const strategy = new MicroGrantsStrategy({
     chain,
-    rpc: "https://arbitrum-sepolia.blockpi.network/v1/rpc/public",
+    rpc: commonConfig.rpc,
     poolId,
   });
   let anchorAddress: string = ZERO_ADDRESS;
@@ -244,7 +248,7 @@ export const createApplication = async (
   // todo: snippet => getRegisterRecipientData
   const registerRecipientData = strategy.getRegisterRecipientData({
     registryAnchor: anchorAddress as `0x${string}`,
-    recipientAddress: "0x31a874d092e48610d61ea0d68b87a8d9b0657a14",
+    recipientAddress: commonConfig.recipientId,
     requestedAmount: data.requestedAmount,
     metadata: {
       protocol: BigInt(1),
@@ -331,9 +335,9 @@ export const allocate = async (data: Allocation) => {
 
   if (strategy) {
     // todo: set your poolId here
-    strategy.setPoolId(186);
+    strategy.setPoolId(commonConfig.poolId);
 
-    console.log(data)
+    console.log(data);
 
     // Get the allocation data from the SDK
     // todo: snippet => getAllocationData
